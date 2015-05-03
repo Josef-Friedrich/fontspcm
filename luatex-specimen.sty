@@ -1,0 +1,37 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{fontsampler}
+
+\RequirePackage{fontspec}
+
+\directlua{
+  require("fontsampler.lua")
+}
+
+\newcommand{\fontsampler}[1]{
+  \directlua{
+    fontsampler("#1")
+  }
+}
+
+\newcommand{\fonttable}[2]{
+  \par
+  {\fontspec{#1} \directlua{tex.print(sampletext)}}
+  \par
+  {\tiny #2}
+  \bigskip
+}
+
+\newcommand{\sampletext}[1]{
+  \directlua{
+    sampletext = "#1"
+  }
+}
+
+\newcommand{\glyphs}[1]{
+  \catcode`\_=12
+  \catcode`\$=12
+  \renewcommand{\arraystretch}{2}
+  \noindent\directlua{
+    glyphs("#1")
+  }
+}
