@@ -27,12 +27,11 @@ function fontsampler(dir)
   local p = {}
 
   for path in dirtree(dir) do
-    if path:match(".otf","-4") then
+    if path:match(".ttf","-4") then
 
       f = fontloader.open(path)
 
       --table.insert(t, f.fullname)
-
 
       w[f.weight] = path
       t[f.familyname] = w
@@ -58,9 +57,7 @@ function fontsampler(dir)
 
     end
   end
-
 end
-
 
 function glyphs(path)
 
