@@ -37,6 +37,9 @@
 \EnableCrossrefs
 \CodelineIndex
 \RecordChanges
+
+\MakeShortVerb{\|}
+
 \begin{document}
   \DocInput{specimen.dtx}
   \PrintChanges
@@ -139,6 +142,59 @@ or manually:
 }
 %    \end{macrocode}
 %
+% \begin{macro}{\specimen@glyph@view}
+% This macro formats the view of one glyph.
+%    \begin{macrocode}
+\def\specimen@glyph@view#1{%
+  \noindent%
+  \parbox[t][0.75cm][c]{1cm}{%
+    \centerline{\Large #1}%
+  }%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\specimen@glyph@name}
+% The macro |\specimen@glyph@name| formats the glyph name.
+%    \begin{macrocode}
+\def\specimen@glyph@name#1{%
+  \noindent%
+  \parbox[t][0.75cm][c]{1cm}{%
+    \centerline{%
+      \tiny%
+      \fontfamily{lmtt}\selectfont%
+      #1%
+    }%
+  }%
+}
+%    \end{macrocode}
+% \end{macro}
+
+% \begin{macro}{\specimen@glyph@content}
+%    \begin{macrocode}
+\def\specimen@glyph@content#1#2{%
+  \par%
+  \specimen@glyph@view{#1}%
+  \par%
+  \specimen@glyph@name{#2}%
+  \par%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\specimenglyphframe}
+%    \begin{macrocode}
+\def\specimenglyphframe#1#2{%
+  \fbox{%
+    \parbox[b][1.5cm][t]{1cm}{%
+      \specimen@glyph@content{#1}{#2}%
+    }%
+  }%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+%
 % \begin{macro}{\fontsampler}
 %    \begin{macrocode}
 \newcommand{\fontsampler}[1]{
@@ -171,9 +227,9 @@ or manually:
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\glyphs}
+% \begin{macro}{\specimenglyphs}
 %    \begin{macrocode}
-\newcommand{\glyphs}[1]{
+\newcommand{\specimenglyphs}[1]{
   \catcode`\_=12
   \catcode`\$=12
   \renewcommand{\arraystretch}{2}
@@ -212,7 +268,9 @@ function dirtree(dir)
 
   return coroutine.wrap(function() yieldtree(dir) end)
 end
-
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 function fontsampler(dir)
   local t = {}
   local w = {}
@@ -236,57 +294,34 @@ function fontsampler(dir)
         "Weight: " .. f.weight .. "; "
 
       -- tex.print(output)
-      -- tex.print("\\fonttable{" .. f.fontname .. "}{" .. output  .. "}")
-
-    end
-  end
-
-  for familyname,w in pairs(t) do
-    tex.print("\\section{" .. familyname .. "}")
-    for weight, path in pairs(w) do
-      tex.print("\\subsection{" .. weight .. "}")
-      tex.print(path)
+      tex.print("\\fonttable{" .. f.fontname .. "}{" .. output  .. "}")
 
     end
   end
 end
-
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 function glyphs(path)
-
   local f = fontloader.open(path)
-
   local i = 0
   while (i < f.glyphmax) do
-
-     local g = f.glyphs[i]
-
-     if g then
-
+    local g = f.glyphs[i]
+    if g then
       local chr = fontchar(g.name)
-      local content = [[
-      \noindent\parbox[t][0.75cm][c]{1cm}{\centerline{\Large %s}}
-
-      \noindent\parbox[t][0.75cm][c]{1cm}{\centerline{\tiny\fontfamily{lmtt}\selectfont %s}}
-      ]]
-
-      content = string.format(content, chr, g.name)
-
-      local frame = [[\fbox{\parbox[b][1.5cm][t]{1cm}{%s}}
-      ]]
-
-      output = string.format(frame, content)
-
-      tex.print(output)
-
-     end
-
-     i = i + 1
+      if chr then
+        frame = [[\specimenglyphframe{%s}{%s}]]
+        output = string.format(frame, chr, g.name)
+        tex.print(output)
+      end
+    end
+    i = i + 1
   end
-
   fontloader.close(f)
-
 end
-
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 function fontchar(chr)
   local chr = luaotfload.aux.slot_of_name(font.current(), chr, false)
   if chr and type(chr) == "number" then
@@ -298,11 +333,6 @@ end
 % \iffalse
 %</lua>
 % \fi
-%
-%
-% \changes{v1.0a}{2004/11/05}{Added a spurious change log entry to
-%   show what a change \emph{within} an environment definition looks
-%   like.}
 %
 % \Finale
 \endinput
