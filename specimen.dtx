@@ -138,7 +138,7 @@ or manually:
 %    \begin{macrocode}
 \RequirePackage{fontspec}
 \directlua{
-  require("specimen")
+  specimen = require('specimen')
 }
 %    \end{macrocode}
 %
@@ -148,7 +148,7 @@ or manually:
 \def\specimen@glyph@view#1{%
   \noindent%
   \parbox[t][0.75cm][c]{1cm}{%
-    \centerline{\Large #1}%
+    \centerline{\huge #1}%
   }%
 }
 %    \end{macrocode}
@@ -169,7 +169,7 @@ or manually:
 }
 %    \end{macrocode}
 % \end{macro}
-
+%
 % \begin{macro}{\specimen@glyph@content}
 %    \begin{macrocode}
 \def\specimen@glyph@content#1#2{%
@@ -195,11 +195,33 @@ or manually:
 % \end{macro}
 %
 %
+% \begin{macro}{\specimensetfont}
+%    \begin{macrocode}
+\def\specimensetfont{%
+  \directlua{
+    specimen.set_font()
+  }%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\specimeninfo}
+%    \begin{macrocode}
+\def\specimeninfo#1{%
+  \directlua{
+    tex.print(specimen.font['#1'])
+  }%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+%
 % \begin{macro}{\fontsampler}
 %    \begin{macrocode}
 \newcommand{\fontsampler}[1]{
   \directlua{
-    fontsampler("#1")
+    specimen.fontsampler("#1")
   }
 }
 %    \end{macrocode}
@@ -221,7 +243,7 @@ or manually:
 %    \begin{macrocode}
 \newcommand{\sampletext}[1]{
   \directlua{
-    sampletext = "#1"
+    specimen.sampletext = "#1"
   }
 }
 %    \end{macrocode}
@@ -229,12 +251,12 @@ or manually:
 %
 % \begin{macro}{\specimenglyphs}
 %    \begin{macrocode}
-\newcommand{\specimenglyphs}[1]{
+\newcommand{\specimenglyphs}{
   \catcode`\_=12
   \catcode`\$=12
   \renewcommand{\arraystretch}{2}
   \noindent\directlua{
-    glyphs("#1")
+    specimen.glyphs()
   }
 }
 %    \end{macrocode}
@@ -246,7 +268,9 @@ or manually:
 % \fi
 %
 %    \begin{macrocode}
-function dirtree(dir)
+local specimen = {}
+
+local function dirtree(dir)
   assert(dir and dir ~= "", "directory parameter is missing or empty")
   if string.sub(dir, -1) == "/" then
     dir=string.sub(dir, 1, -2)
@@ -271,7 +295,7 @@ end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-function fontsampler(dir)
+function specimen.fontsampler(dir)
   local t = {}
   local w = {}
   local p = {}
@@ -302,13 +326,13 @@ end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-function glyphs(path)
-  local f = fontloader.open(path)
+function specimen.glyphs()
+  local f = specimen.font
   local i = 0
   while (i < f.glyphmax) do
     local g = f.glyphs[i]
     if g then
-      local chr = fontchar(g.name)
+      local chr = specimen.fontchar(g.name)
       if chr then
         frame = [[\specimenglyphframe{%s}{%s}]]
         output = string.format(frame, chr, g.name)
@@ -322,12 +346,21 @@ end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-function fontchar(chr)
+function specimen.set_font()
+  local f = font.getfont(font.current())
+  specimen.font = fontloader.open(f.filename)
+end
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+function specimen.fontchar(chr)
   local chr = luaotfload.aux.slot_of_name(font.current(), chr, false)
   if chr and type(chr) == "number" then
     return string.format([[\char"%X]], chr)
   end
 end
+
+return specimen
 %    \end{macrocode}
 %
 % \iffalse
