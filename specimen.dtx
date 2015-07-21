@@ -239,12 +239,28 @@ or manually:
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\sampletext}
+% \begin{macro}{\specimen@sample@text}
+% The macro prints the string |specimen.sample_text|.
 %    \begin{macrocode}
-\newcommand{\sampletext}[1]{
-  \directlua{
-    specimen.sampletext = "#1"
-  }
+\newcommand{\specimen@sample@text}[1]{%
+  \noindent%
+  \fontsize{#1pt}{1em}\selectfont%
+  \mbox{%
+    \directlua{
+      tex.print(specimen.sample_text)
+    }%
+  }%
+  \par%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\specimensizes}
+%    \begin{macrocode}
+\newcommand{\specimensizes}{%
+  \makeatletter
+  \directlua{specimen.sizes()}
+  \makeatother
 }
 %    \end{macrocode}
 % \end{macro}
@@ -269,6 +285,8 @@ or manually:
 %
 %    \begin{macrocode}
 local specimen = {}
+specimen.sample_text = 'The quick brown fox jumps over the lazy dog.'
+specimen.font_sizes = {6,7,8,9,10,11,12,14,16,18,22,24,48,64}
 
 local function dirtree(dir)
   assert(dir and dir ~= "", "directory parameter is missing or empty")
@@ -349,6 +367,14 @@ end
 function specimen.set_font()
   local f = font.getfont(font.current())
   specimen.font = fontloader.open(f.filename)
+end
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+function specimen.sizes()
+  for key, size in ipairs(specimen.font_sizes) do
+    tex.print(' \\specimen@sample@text{' .. size .. '} ')
+  end
 end
 %    \end{macrocode}
 %
