@@ -210,7 +210,10 @@ or manually:
 %    \begin{macrocode}
 \def\specimen@info#1{%
   \directlua{
-    tex.print(specimen.font['#1'])
+    output = specimen.font['#1']
+    if output then
+      tex.print(output)
+    end
   }%
 }
 %    \end{macrocode}
@@ -280,9 +283,11 @@ or manually:
   \let\i\specimen@info%
   \specimen@font@neutral%
   \noindent%
- % Name: \i{name}
+  Font name: \i{fontname}
   Full name: \i{fullname}
-  %File name: \i{filename}
+  Copyright: \i{copyright}
+  File name: \i{filename}
+  Weight: \i{weight}
   \par
   \endgroup
 }
@@ -403,7 +408,11 @@ end
 %    \begin{macrocode}
 function specimen.set_font()
   local f = font.getfont(font.current())
-  specimen.font = fontloader.open(f.filename)
+  local filename = f.filename
+  f = fontloader.open(filename)
+  specimen.font = fontloader.to_table(f)
+  specimen.font.filename = filename
+  fontloader.close(f)
 end
 %    \end{macrocode}
 %
