@@ -28,12 +28,12 @@
 %<package>\NeedsTeXFormat{LaTeX2e}[1999/12/01]
 %<package>\ProvidesPackage{specimen}
 %<*package>
-    [2019/07/19 v1.0 .dtx specimen file]
+    [2015/07/19 v1.0 .dtx specimen file]
 %</package>
 %
 %<*driver>
 \documentclass{ltxdoc}
-\usepackage{specimen}[2004/11/05]
+\usepackage{specimen}[2015/07/19]
 \EnableCrossrefs
 \CodelineIndex
 \RecordChanges
@@ -195,9 +195,9 @@ or manually:
 % \end{macro}
 %
 %
-% \begin{macro}{\specimensetfont}
+% \begin{macro}{\specimen@set@font}
 %    \begin{macrocode}
-\def\specimensetfont{%
+\def\specimen@set@font{%
   \directlua{
     specimen.set_font()
   }%
@@ -206,9 +206,9 @@ or manually:
 % \end{macro}
 %
 %
-% \begin{macro}{\specimeninfo}
+% \begin{macro}{\specimen@info}
 %    \begin{macrocode}
-\def\specimeninfo#1{%
+\def\specimen@info#1{%
   \directlua{
     tex.print(specimen.font['#1'])
   }%
@@ -255,9 +255,9 @@ or manually:
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\specimensizes}
+% \begin{macro}{\specimen@sizes}
 %    \begin{macrocode}
-\newcommand{\specimensizes}{%
+\newcommand{\specimen@sizes}{%
   \makeatletter
   \directlua{specimen.sizes()}
   \makeatother
@@ -265,9 +265,33 @@ or manually:
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\specimenglyphs}
+% \begin{macro}{\specimen@font@neutral}
 %    \begin{macrocode}
-\newcommand{\specimenglyphs}{
+\newcommand{\specimen@font@neutral}{%
+  \fontfamily{lmr}\selectfont%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\specimen@font@info}
+%    \begin{macrocode}
+\newcommand{\specimen@font@info}{%
+  \begingroup%
+  \let\i\specimen@info%
+  \specimen@font@neutral%
+  \noindent%
+ % Name: \i{name}
+  Full name: \i{fullname}
+  %File name: \i{filename}
+  \par
+  \endgroup
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\specimen@glyphs}
+%    \begin{macrocode}
+\newcommand{\specimen@glyphs}{
   \catcode`\_=12
   \catcode`\$=12
   \renewcommand{\arraystretch}{2}
@@ -277,6 +301,19 @@ or manually:
 }
 %    \end{macrocode}
 % \end{macro}
+%
+%
+% \begin{environment}{specimen}
+%    \begin{macrocode}
+\newenvironment{specimen}[1]{
+  \fontspec{#1}%
+  \specimen@set@font%
+  \let\sizes\specimen@sizes%
+  \let\glyphs\specimen@glyphs%
+  \let\info\specimen@font@info%
+}{}
+%    \end{macrocode}
+% \end{environment}
 %
 % \iffalse
 %</package>
