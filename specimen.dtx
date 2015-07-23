@@ -246,6 +246,7 @@ or manually:
 % The macro prints the string |specimen.sample_text|.
 %    \begin{macrocode}
 \newcommand{\specimen@sample@text}[1]{%
+  \begingroup%
   \noindent%
   \fontsize{#1pt}{1em}\selectfont%
   \mbox{%
@@ -254,6 +255,7 @@ or manually:
     }%
   }%
   \par%
+  \endgroup%
 }
 %    \end{macrocode}
 % \end{macro}
@@ -275,21 +277,34 @@ or manually:
 }
 %    \end{macrocode}
 % \end{macro}
-%
-% \begin{macro}{\specimen@font@info}
+% \begin{macro}{\specimen@font@info@format}
 %    \begin{macrocode}
-\newcommand{\specimen@font@info}{%
+\newcommand{\specimen@font@info@format}[2]{%
   \begingroup%
   \let\i\specimen@info%
   \specimen@font@neutral%
   \noindent%
-  Font name: \i{fontname}
-  Full name: \i{fullname}
-  Copyright: \i{copyright}
-  File name: \i{filename}
-  Weight: \i{weight}
-  \par
-  \endgroup
+  \textbf{#1:} \i{#2}%
+  \par%
+  \endgroup%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\specimen@font@info}
+%    \begin{macrocode}
+\newcommand{\specimen@font@info}{%
+  \let\format\specimen@font@info@format%
+  \format{Font name}{fontname}
+  \format{Full name}{fullname}
+  \format{Family name}{familyname}
+  \format{Copyright}{copyright}
+  \format{File name}{filename}
+  \format{Weight}{weight}
+  \format{Italic angle}{italicangle}
+  \format{Comments}{comments}
+  \format{Origname}{origname}
+  \format{Glyph count}{glyphmax}
 }
 %    \end{macrocode}
 % \end{macro}
@@ -401,7 +416,6 @@ function specimen.glyphs()
     end
     i = i + 1
   end
-  fontloader.close(f)
 end
 %    \end{macrocode}
 %
