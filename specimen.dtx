@@ -42,6 +42,136 @@
 \MakeShortVerb{\|}
 
 \begin{document}
+
+\changes{v1.0}{2004/11/05}{Initial version}
+
+\GetFileInfo{specimen.dtx}
+
+\DoNotIndex{\newcommand,\newenvironment}
+
+\title{The \textsf{specimen} package\thanks{This document
+  corresponds to \textsf{specimen}~\fileversion, dated \filedate.}}
+\author{Josef Friedrich \\ \texttt{josef@friedrich.rocks}}
+
+\maketitle
+
+\section{Introduction}
+
+\subsection{About the package name}
+
+The name of the package is inspired by the package names |fontspec|
+and |fontsmpl|. There are a lot of other packages dealing with font
+samples.
+
+\subsection{Other font specimen packages.}
+
+\begin{description}
+
+
+% fontbl
+\item[\href{https://www.ctan.org/pkg/fontbl}{fontbl}]
+
+\emph{A font sampler}
+
+An interactive program, that asks for font name and
+magnification, and then sets a table, a lower- and an upper-case
+alphabet listing, and a short text sample. This sample reflects
+a combination of the options available in testfont (in the Plain
+\TeX distribution).
+
+
+% fontbook
+\item[\href{https://www.ctan.org/pkg/fontbook}{fontbook}]
+
+\emph{Generate a font book}
+
+The package provides a means of producing a ‘book’ of font samples
+(for evaluation, etc.).
+
+
+% fontchart
+\item[\href{https://www.ctan.org/pkg/fontchart}{fontchart}]
+
+\emph{A font sampler}
+
+Produces a font sample that is in some ways simpler than that
+produced by testfont (in the Plain TeX distribution), but which
+shows strikingly large glyph images, and avoids some difficulties
+with boundary characters, such as are often used in Greek fonts (and
+fonts for similar writing systems).
+
+
+% fontsampler
+\item[\href{https://www.ctan.org/pkg/fontsampler}{fontsampler}]
+
+\emph{Samples of fonts that come with TeX Live}
+
+A set of short examples of a wide collection of fonts.
+
+
+% fontsmpl
+\item[\href{https://www.ctan.org/pkg/fontsmpl}{fontsmpl}]
+
+\emph{Print a sample of a font}
+
+Provides a package which defines a command |\fontsample| (which
+will print a sample of the current font), and a document which
+prompts for a font family name (such as "cmr") and prints a sampler of
+the whole family.
+
+This package is part of the tools bundle in the LaTeX required
+distribution.
+
+
+% fonttable
+\item[\href{https://www.ctan.org/pkg/fonttable}{fonttable}]
+
+\emph{Print font tables from a LaTeX document}
+
+This is a package version of nfssfont.tex (part of the LaTeX
+distribution); it enables you to print a table of the characters of a
+font and/or some text (for demonstration or testing purposes), from
+within a document. (Packages such as |testfont| and nfssfont.tex provide
+these facilities, but they run as interactive programs: the user is
+expected to type details of what is needed.)
+
+Note that the package |mftinc| also has a |\fonttable| function; the
+documentation explains how avoid a clash with that package.
+
+
+% showcharinbox
+\item[\href{https://www.ctan.org/pkg/showcharinbox}{showcharinbox}]
+
+\emph{Show characters inside a box}
+
+The package typesets a character inside a box, showing where reference
+point is, and displaying width, height, and depth information of the
+character.
+
+The output is like that on page 63 of “The \TeX{}Book” or page 101 of
+“The METAFONTbook”. The package itself is motivated by Knuth’s macros in
+the file manmac.tex.
+
+Users should note that using a small size for the character inside the
+box does not make any sense: use a large size.
+
+
+% testfont
+\item[\href{https://www.ctan.org/pkg/testfont}{testfont}]
+
+\emph{A testbed for font evaluation}
+
+This file (part of the Plain  \TeX{} distribution) allows the user to
+select fonts and to perform a number of evaluation tests, from
+simple font tables through to elaborate pattern samples.
+
+\end{description}
+
+\section{Usage}
+
+Put text here.
+
+
   \DocInput{specimen.dtx}
   \PrintChanges
   \PrintIndex
@@ -105,48 +235,6 @@ or manually:
 %   Right bracket \]     Circumflex    \^     Underscore    \_
 %   Grave accent  \`     Left brace    \{     Vertical bar  \|
 %   Right brace   \}     Tilde         \~}
-%
-%
-% \changes{v1.0}{2004/11/05}{Initial version}
-%
-% \GetFileInfo{specimen.dtx}
-%
-% \DoNotIndex{\newcommand,\newenvironment}
-%
-%
-% \title{The \textsf{specimen} package\thanks{This document
-%   corresponds to \textsf{specimen}~\fileversion, dated \filedate.}}
-% \author{Josef Friedrich \\ \texttt{josef@friedrich.rocks}}
-%
-% \maketitle
-%
-% \section{Introduction}
-%
-% \subsection{About the package name}
-%
-% The name of the package is inspired by the package names |fontspec|
-% and |fontsmpl|. There are a lot of other packages dealing with font
-% samples.
-%
-% \subsection{Other font specimen packages.}
-%
-% \begin{description}
-% \item[\href{https://www.ctan.org/pkg/fontbook}{fontbook}]
-% Fsdfsdf \\
-% The pack­age pro­vides a means of pro­duc­ing a ‘book’ of font sam­ples
-% (for eval­u­a­tion, etc.).
-%
-% \item[\href{https://www.ctan.org/pkg/fontbl}{fontbl}] A font sam­pler
-%
-% \item[\href{https://www.ctan.org/pkg/fontbook}{fontbook}] Font book
-%
-% \item[\href{https://www.ctan.org/pkg/fonttable}{fonttable}]
-% \end{description}
-%
-% \section{Usage}
-%
-% Put text here.
-%
 %
 % \StopEventually{}
 %
