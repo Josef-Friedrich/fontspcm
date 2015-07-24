@@ -16,24 +16,24 @@
 %
 % The Current Maintainer of this work is Josef Friedrih.
 %
-% This work consists of the files specimen.dtx and specimen.ins
-% and the derived filebase specimen.sty.
+% This work consists of the files fontspcm.dtx and fontspcm.ins
+% and the derived filebase fontspcm.sty.
 %
 % \fi
 %
 % \iffalse
 %<*driver>
-\ProvidesFile{specimen.dtx}
+\ProvidesFile{fontspcm.dtx}
 %</driver>
 %<package>\NeedsTeXFormat{LaTeX2e}[1999/12/01]
-%<package>\ProvidesPackage{specimen}
+%<package>\ProvidesPackage{fontspcm}
 %<*package>
-    [2015/07/19 v1.0 .dtx specimen file]
+    [2015/07/19 v1.0 .dtx fontspcm file]
 %</package>
 %
 %<*driver>
 \documentclass{ltxdoc}
-\usepackage{specimen}[2015/07/19]
+\usepackage{fontspcm}[2015/07/19]
 \usepackage{hyperref}
 \EnableCrossrefs
 \CodelineIndex
@@ -45,12 +45,13 @@
 
 \changes{v1.0}{2004/11/05}{Initial version}
 
-\GetFileInfo{specimen.dtx}
+\GetFileInfo{fontspcm.dtx}
 
 \DoNotIndex{\newcommand,\newenvironment}
 
-\title{The \textsf{specimen} package\thanks{This document
-  corresponds to \textsf{specimen}~\fileversion, dated \filedate.}}
+\title{The \textsf{fontspcm} \emph{(font specimen)} package\thanks{This
+  document corresponds to \textsf{fontspcm}~\fileversion, dated
+  \filedate.}}
 \author{Josef Friedrich \\ \texttt{josef@friedrich.rocks}}
 
 \maketitle
@@ -59,11 +60,12 @@
 
 \subsection{About the package name}
 
-The name of the package is inspired by the package names |fontspec|
-and |fontsmpl|. There are a lot of other packages dealing with font
-samples.
+|fontspcm| is a abbreviation for \emph{font specimen}. The name of the
+package is inspired by the packages |fontspec| and |fontsmpl|.
 
 \subsection{Other font specimen packages.}
+
+There are a lot of other packages dealing with font samples.
 
 \begin{description}
 
@@ -172,7 +174,7 @@ simple font tables through to elaborate pattern samples.
 Put text here.
 
 
-  \DocInput{specimen.dtx}
+  \DocInput{fontspcm.dtx}
   \PrintChanges
   \PrintIndex
 \end{document}
@@ -194,14 +196,14 @@ version 2005/12/01 or later.
 
 # Repository
 
-https://github.com/Josef-Friedrich/specimen
+https://github.com/Josef-Friedrich/fontspcm
 
 # Installation
 
 Get source:
 
-    git clone git@github.com:Josef-Friedrich/specimen.git
-    cd specimen
+    git clone git@github.com:Josef-Friedrich/fontspcm.git
+    cd fontspcm
 
 Compile:
 
@@ -209,11 +211,11 @@ Compile:
 
 or manually:
 
-    luatex specimen.ins
-    lualatex specimen.dtx
-    makeindex -s gglo.ist -o specimen.gls specimen.glo
-    makeindex -s gind.ist -o specimen.ind specimen.idx
-    lualatex specimen.dtx
+    luatex fontspcm.ins
+    lualatex fontspcm.dtx
+    makeindex -s gglo.ist -o fontspcm.gls fontspcm.glo
+    makeindex -s gind.ist -o fontspcm.ind fontspcm.idx
+    lualatex fontspcm.dtx
 
 %</readme>
 % \fi
@@ -246,14 +248,14 @@ or manually:
 %    \begin{macrocode}
 \RequirePackage{fontspec}
 \directlua{
-  specimen = require('specimen')
+  fontspcm = require('fontspcm')
 }
 %    \end{macrocode}
 %
-% \begin{macro}{\specimen@glyph@view}
+% \begin{macro}{\fontspcm@glyph@view}
 % This macro formats the view of one glyph.
 %    \begin{macrocode}
-\def\specimen@glyph@view#1{%
+\def\fontspcm@glyph@view#1{%
   \noindent%
   \parbox[t][0.75cm][c]{1cm}{%
     \centerline{\huge #1}%
@@ -262,10 +264,10 @@ or manually:
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\specimen@glyph@name}
-% The macro |\specimen@glyph@name| formats the glyph name.
+% \begin{macro}{\fontspcm@glyph@name}
+% The macro |\fontspcm@glyph@name| formats the glyph name.
 %    \begin{macrocode}
-\def\specimen@glyph@name#1{%
+\def\fontspcm@glyph@name#1{%
   \noindent%
   \parbox[t][0.75cm][c]{1cm}{%
     \centerline{%
@@ -278,24 +280,24 @@ or manually:
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\specimen@glyph@content}
+% \begin{macro}{\fontspcm@glyph@content}
 %    \begin{macrocode}
-\def\specimen@glyph@content#1#2{%
+\def\fontspcm@glyph@content#1#2{%
   \par%
-  \specimen@glyph@view{#1}%
+  \fontspcm@glyph@view{#1}%
   \par%
-  \specimen@glyph@name{#2}%
+  \fontspcm@glyph@name{#2}%
   \par%
 }
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\specimenglyphframe}
+% \begin{macro}{\fontspcmglyphframe}
 %    \begin{macrocode}
-\def\specimenglyphframe#1#2{%
+\def\fontspcmglyphframe#1#2{%
   \fbox{%
     \parbox[b][1.5cm][t]{1cm}{%
-      \specimen@glyph@content{#1}{#2}%
+      \fontspcm@glyph@content{#1}{#2}%
     }%
   }%
 }
@@ -303,22 +305,22 @@ or manually:
 % \end{macro}
 %
 %
-% \begin{macro}{\specimen@set@font}
+% \begin{macro}{\fontspcm@set@font}
 %    \begin{macrocode}
-\def\specimen@set@font{%
+\def\fontspcm@set@font{%
   \directlua{
-    specimen.set_font()
+    fontspcm.set_font()
   }%
 }
 %    \end{macrocode}
 % \end{macro}
 %
 %
-% \begin{macro}{\specimen@info}
+% \begin{macro}{\fontspcm@info}
 %    \begin{macrocode}
-\def\specimen@info#1{%
+\def\fontspcm@info#1{%
   \directlua{
-    output = specimen.font['#1']
+    output = fontspcm.font['#1']
     if output then
       tex.print(output)
     end
@@ -332,7 +334,7 @@ or manually:
 %    \begin{macrocode}
 \newcommand{\fontsampler}[1]{
   \directlua{
-    specimen.fontsampler("#1")
+    fontspcm.fontsampler("#1")
   }
 }
 %    \end{macrocode}
@@ -350,16 +352,16 @@ or manually:
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\specimen@sample@text}
-% The macro prints the string |specimen.sample_text|.
+% \begin{macro}{\fontspcm@sample@text}
+% The macro prints the string |fontspcm.sample_text|.
 %    \begin{macrocode}
-\newcommand{\specimen@sample@text}[1]{%
+\newcommand{\fontspcm@sample@text}[1]{%
   \begingroup%
   \noindent%
   \fontsize{#1pt}{1em}\selectfont%
   \mbox{%
     \directlua{
-      tex.print(specimen.sample_text)
+      tex.print(fontspcm.sample_text)
     }%
   }%
   \par%
@@ -368,29 +370,29 @@ or manually:
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\specimen@sizes}
+% \begin{macro}{\fontspcm@sizes}
 %    \begin{macrocode}
-\newcommand{\specimen@sizes}{%
+\newcommand{\fontspcm@sizes}{%
   \makeatletter
-  \directlua{specimen.sizes()}
+  \directlua{fontspcm.sizes()}
   \makeatother
 }
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\specimen@font@neutral}
+% \begin{macro}{\fontspcm@font@neutral}
 %    \begin{macrocode}
-\newcommand{\specimen@font@neutral}{%
+\newcommand{\fontspcm@font@neutral}{%
   \fontfamily{lmr}\selectfont%
 }
 %    \end{macrocode}
 % \end{macro}
-% \begin{macro}{\specimen@font@info@format}
+% \begin{macro}{\fontspcm@font@info@format}
 %    \begin{macrocode}
-\newcommand{\specimen@font@info@format}[2]{%
+\newcommand{\fontspcm@font@info@format}[2]{%
   \begingroup%
-  \let\i\specimen@info%
-  \specimen@font@neutral%
+  \let\i\fontspcm@info%
+  \fontspcm@font@neutral%
   \noindent%
   \textbf{#1:} \i{#2}%
   \par%
@@ -399,10 +401,10 @@ or manually:
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\specimen@font@info}
+% \begin{macro}{\fontspcm@font@info}
 %    \begin{macrocode}
-\newcommand{\specimen@font@info}{%
-  \let\format\specimen@font@info@format%
+\newcommand{\fontspcm@font@info}{%
+  \let\format\fontspcm@font@info@format%
   \format{Font name}{fontname}
   \format{Full name}{fullname}
   \format{Family name}{familyname}
@@ -417,41 +419,41 @@ or manually:
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\specimen@glyph}
+% \begin{macro}{\fontspcm@glyph}
 %    \begin{macrocode}
-\newcommand{\specimen@glyph}[1]{
+\newcommand{\fontspcm@glyph}[1]{
   \catcode`\_=12
   \catcode`\$=12
   \renewcommand{\arraystretch}{2}
   \directlua{
-    specimen.fontchar(#1)
+    fontspcm.fontchar(#1)
   }
 }
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\specimen@glyphs}
+% \begin{macro}{\fontspcm@glyphs}
 %    \begin{macrocode}
-\newcommand{\specimen@glyphs}{
+\newcommand{\fontspcm@glyphs}{
   \catcode`\_=12
   \catcode`\$=12
   \renewcommand{\arraystretch}{2}
   \noindent\directlua{
-    specimen.glyphs()
+    fontspcm.glyphs()
   }
 }
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{environment}{specimen}
+% \begin{environment}{fontspcm}
 %    \begin{macrocode}
-\newenvironment{specimen}[1]{
+\newenvironment{fontspcm}[1]{
   \fontspec{#1}%
-  \specimen@set@font%
-  \let\sizes\specimen@sizes%
-  \let\glyphs\specimen@glyphs%
-  \let\glyph\specimen@glyph%
-  \let\info\specimen@font@info%
+  \fontspcm@set@font%
+  \let\sizes\fontspcm@sizes%
+  \let\glyphs\fontspcm@glyphs%
+  \let\glyph\fontspcm@glyph%
+  \let\info\fontspcm@font@info%
 }{}
 %    \end{macrocode}
 % \end{environment}
@@ -462,33 +464,33 @@ or manually:
 % \fi
 %
 %    \begin{macrocode}
-local specimen = {}
+local fontspcm = {}
 %    \end{macrocode}
 %
-% |specimen.font| is a lua table which stores all informations of the
+% |fontspcm.font| is a lua table which stores all informations of the
 % current font. This a font table is generated by calling first
 % |fontloader.open()| and then |fontloader.to_table()|.
 %    \begin{macrocode}
-specimen.font = {}
+fontspcm.font = {}
 %    \end{macrocode}
 %
-% |specimen.font_id| is the variable which holds the current font id.
+% |fontspcm.font_id| is the variable which holds the current font id.
 % The font id is a numeric value which is returned by the lua function
 % |font.current()|.
 %    \begin{macrocode}
-specimen.font_id = ''
+fontspcm.font_id = ''
 %    \end{macrocode}
 %
-% |specimen.sample_text| is a short sample text which is displayed
+% |fontspcm.sample_text| is a short sample text which is displayed
 % without line breaks.
 %    \begin{macrocode}
-specimen.sample_text = 'The quick brown fox jumps over the lazy dog.'
+fontspcm.sample_text = 'The quick brown fox jumps over the lazy dog.'
 %    \end{macrocode}
 %
-% |specimen.font_sizes| stores font sizes in points dimension (pt) as a
+% |fontspcm.font_sizes| stores font sizes in points dimension (pt) as a
 % lua table.
 %    \begin{macrocode}
-specimen.font_sizes = {6,7,8,9,10,11,12,14,16,18,22,24,48,64}
+fontspcm.font_sizes = {6,7,8,9,10,11,12,14,16,18,22,24,48,64}
 %    \end{macrocode}
 %
 %    \begin{macrocode}
@@ -517,7 +519,7 @@ end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-function specimen.fontsampler(dir)
+function fontspcm.fontsampler(dir)
   local t = {}
   local w = {}
   local p = {}
@@ -548,15 +550,15 @@ end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-function specimen.glyphs()
-  local f = specimen.font
+function fontspcm.glyphs()
+  local f = fontspcm.font
   local i = 0
   while (i < f.glyphmax) do
     local g = f.glyphs[i]
     if g then
-      local chr = specimen.fontchar(g.name)
+      local chr = fontspcm.fontchar(g.name)
       if chr then
-        frame = [[\specimenglyphframe{%s}{%s}]]
+        frame = [[\fontspcmglyphframe{%s}{%s}]]
         output = string.format(frame, chr, g.name)
         tex.print(output)
       end
@@ -567,28 +569,28 @@ end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-function specimen.set_font()
-  specimen.font_id = font.current()
-  local f = font.getfont(specimen.font_id)
+function fontspcm.set_font()
+  fontspcm.font_id = font.current()
+  local f = font.getfont(fontspcm.font_id)
   local filename = f.filename
   f = fontloader.open(filename)
-  specimen.font = fontloader.to_table(f)
-  specimen.font.filename = filename
+  fontspcm.font = fontloader.to_table(f)
+  fontspcm.font.filename = filename
   fontloader.close(f)
 end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-function specimen.sizes()
-  for key, size in ipairs(specimen.font_sizes) do
-    tex.print(' \\specimen@sample@text{' .. size .. '} ')
+function fontspcm.sizes()
+  for key, size in ipairs(fontspcm.font_sizes) do
+    tex.print(' \\fontspcm@sample@text{' .. size .. '} ')
   end
 end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-function specimen.fontchar(chr)
-  local chr = luaotfload.aux.slot_of_name(specimen.font_id, chr, false)
+function fontspcm.fontchar(chr)
+  local chr = luaotfload.aux.slot_of_name(fontspcm.font_id, chr, false)
   if chr and type(chr) == "number" then
     return string.format([[\char"%X]], chr)
   end
@@ -597,7 +599,7 @@ end
 %
 % Return the module table.
 %    \begin{macrocode}
-return specimen
+return fontspcm
 %    \end{macrocode}
 %
 % \iffalse

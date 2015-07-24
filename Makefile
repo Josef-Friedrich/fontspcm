@@ -1,21 +1,21 @@
 all:
-	luatex specimen.ins
-	lualatex specimen.dtx
-	makeindex -s gglo.ist -o specimen.gls specimen.glo
-	makeindex -s gind.ist -o specimen.ind specimen.idx
-	lualatex specimen.dtx
+	luatex fontspcm.ins
+	lualatex fontspcm.dtx
+	makeindex -s gglo.ist -o fontspcm.gls fontspcm.glo
+	makeindex -s gind.ist -o fontspcm.ind fontspcm.idx
+	lualatex fontspcm.dtx
 
 clean:
 	./.githook_pre-commit
 
 ctan:
-	rm -rf specimen
-	mkdir specimen
-	cp -f README.md specimen/README
-	cp -f specimen.ins specimen/
-	cp -f specimen.dtx specimen/
-	cp -f specimen.pdf specimen/
-	tar cvfz specimen.tar.gz specimen
-	rm -rf specimen
+	rm -rf fontspcm
+	mkdir fontspcm
+	cp -f README.md fontspcm/README
+	cp -f fontspcm.ins fontspcm/
+	cp -f fontspcm.dtx fontspcm/
+	cp -f fontspcm.pdf fontspcm/
+	tar cvfz fontspcm.tar.gz fontspcm
+	rm -rf fontspcm
 
 .PHONY: all clean ctan

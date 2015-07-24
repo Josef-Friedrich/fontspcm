@@ -14,14 +14,14 @@ version 2005/12/01 or later.
 
 # Repository
 
-https://github.com/Josef-Friedrich/specimen
+https://github.com/Josef-Friedrich/fontspcm
 
 # Installation
 
 Get source:
 
-    git clone git@github.com:Josef-Friedrich/specimen.git
-    cd specimen
+    git clone git@github.com:Josef-Friedrich/fontspcm.git
+    cd fontspcm
 
 Compile:
 
@@ -29,9 +29,9 @@ Compile:
 
 or manually:
 
-    luatex specimen.ins
-    lualatex specimen.dtx
-    makeindex -s gglo.ist -o specimen.gls specimen.glo
-    makeindex -s gind.ist -o specimen.ind specimen.idx
-    lualatex specimen.dtx
+    luatex fontspcm.ins
+    lualatex fontspcm.dtx
+    makeindex -s gglo.ist -o fontspcm.gls fontspcm.glo
+    makeindex -s gind.ist -o fontspcm.ind fontspcm.idx
+    lualatex fontspcm.dtx
 
