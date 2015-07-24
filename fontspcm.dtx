@@ -34,12 +34,59 @@
 %<*driver>
 \documentclass{ltxdoc}
 \usepackage{fontspcm}[2015/07/19]
-\usepackage{hyperref}
+\usepackage{xcolor}
+
+\usepackage[
+  colorlinks=true,
+  linkcolor=red,
+  filecolor=red,
+  urlcolor=red,
+]{hyperref}
+
+\MakeShortVerb{\|}
+
+\setlength{\fboxrule}{0.2pt}
+\setlength{\fboxsep}{4pt}
+
+\makeatletter
+\newcommand{\@minipagerestore}{\setlength{\parindent}{10pt}}
+\makeatother
+
+
+\newsavebox{\examplebox}
+\newenvironment{example}{%
+  \noindent%
+  \begin{lrbox}{\examplebox}%
+  \begin{minipage}{0.9\textwidth}%
+  \footnotesize%
+}{%
+  \end{minipage}%
+  \end{lrbox}%
+  \begin{center}%
+    \fbox{\usebox{\examplebox}}%
+  \end{center}%
+}
+
+% Colors for the codebox
+\definecolor{grayline}{gray}{0.9}
+\definecolor{graybackground}{gray}{0.97}
+
+\newsavebox{\codebox}
+\newenvironment{code}{%
+  \noindent%
+  \begin{lrbox}{\codebox}%
+  \begin{minipage}{0.9\textwidth}%
+}{%
+  \end{minipage}%
+  \end{lrbox}%
+  \begin{center}%
+    \fcolorbox{grayline}{graybackground}{\usebox{\codebox}}%
+  \end{center}%
+}
+
 \EnableCrossrefs
 \CodelineIndex
 \RecordChanges
-
-\MakeShortVerb{\|}
 
 \begin{document}
 
@@ -171,8 +218,56 @@ simple font tables through to elaborate pattern samples.
 
 \section{Usage}
 
-Put text here.
+\subsection{Font selection}
 
+
+
+
+\begin{fontspcm}{FiraSans}[][\bfseries]
+  \oneliner
+  %\sizes[20,6]
+\end{fontspcm}
+
+\subsection{Commands}
+
+\subsubsection{\cmd{\glyphs}}
+
+\subsubsection{\cmd{\sizes}}
+
+The command \cmd{\sizes}\oarg{sizes} returns an one-liner in different
+font sizes.
+
+\begin{code}
+\begin{verbatim}
+\begin{fontspcm}{SourceSansPro}[][\bfseries]
+\sizes
+\end{fontspcm}
+\end{verbatim}
+\end{code}
+
+\noindent By default this font sizes are used:
+
+\begin{example}
+\begin{fontspcm}{SourceSansPro}[][\bfseries]
+  \sizes
+\end{fontspcm}
+\end{example}
+
+\noindent The optinal argument \oarg{sizes} accepts a comma separated
+list of numeric values. This numeric values are the font sizes in the
+dimension \emph{points} (pt).
+
+\begin{code}
+\begin{verbatim}
+\sizes[4,20,6,34]
+\end{verbatim}
+\end{code}
+
+\begin{example}
+\begin{fontspcm}{SourceSansPro}[][\bfseries]
+\sizes[4,20,6,34]
+\end{fontspcm}
+\end{example}
 
   \DocInput{fontspcm.dtx}
   \PrintChanges
@@ -246,7 +341,7 @@ or manually:
 % \fi
 %
 %    \begin{macrocode}
-\RequirePackage{fontspec}
+\RequirePackage{fontspec,xparse}
 \directlua{
   fontspcm = require('fontspcm')
 }
@@ -291,6 +386,15 @@ or manually:
 }
 %    \end{macrocode}
 % \end{macro}
+%
+% % \begin{macro}{\fontspcm@example@text@oneliner}
+%    \begin{macrocode}
+\def\fontspcm@example@text@oneliner{%
+  \directlua{tex.print(fontspcm.oneliner)}%
+}
+%    \end{macrocode}
+% \end{macro}
+%
 %
 % \begin{macro}{\fontspcmglyphframe}
 %    \begin{macrocode}
@@ -353,7 +457,7 @@ or manually:
 % \end{macro}
 %
 % \begin{macro}{\fontspcm@sample@text}
-% The macro prints the string |fontspcm.sample_text|.
+% The macro prints the string |fontspcm.oneliner|.
 %    \begin{macrocode}
 \newcommand{\fontspcm@sample@text}[1]{%
   \begingroup%
@@ -361,7 +465,7 @@ or manually:
   \fontsize{#1pt}{1em}\selectfont%
   \mbox{%
     \directlua{
-      tex.print(fontspcm.sample_text)
+      tex.print(fontspcm.oneliner)
     }%
   }%
   \par%
@@ -372,9 +476,11 @@ or manually:
 %
 % \begin{macro}{\fontspcm@sizes}
 %    \begin{macrocode}
-\newcommand{\fontspcm@sizes}{%
+\newcommand{\fontspcm@sizes}[1][]{%
   \makeatletter
-  \directlua{fontspcm.sizes()}
+  \directlua{
+    fontspcm.sizes({#1})
+  }
   \makeatother
 }
 %    \end{macrocode}
@@ -447,13 +553,15 @@ or manually:
 %
 % \begin{environment}{fontspcm}
 %    \begin{macrocode}
-\newenvironment{fontspcm}[1]{
-  \fontspec{#1}%
+\DeclareDocumentEnvironment{fontspcm}{m O{} O{}}{%
+  \fontspec{#1}[#2]%
+  #3%
   \fontspcm@set@font%
   \let\sizes\fontspcm@sizes%
   \let\glyphs\fontspcm@glyphs%
   \let\glyph\fontspcm@glyph%
   \let\info\fontspcm@font@info%
+  \let\oneliner\fontspcm@example@text@oneliner
 }{}
 %    \end{macrocode}
 % \end{environment}
@@ -481,16 +589,16 @@ fontspcm.font = {}
 fontspcm.font_id = ''
 %    \end{macrocode}
 %
-% |fontspcm.sample_text| is a short sample text which is displayed
+% |fontspcm.oneliner| is a short sample text which is displayed
 % without line breaks.
 %    \begin{macrocode}
-fontspcm.sample_text = 'The quick brown fox jumps over the lazy dog.'
+fontspcm.oneliner = 'The quick brown fox jumps over the lazy dog.'
 %    \end{macrocode}
 %
 % |fontspcm.font_sizes| stores font sizes in points dimension (pt) as a
 % lua table.
 %    \begin{macrocode}
-fontspcm.font_sizes = {6,7,8,9,10,11,12,14,16,18,22,24,48,64}
+fontspcm.font_sizes = {6,8,10,12,16,22,48,64}
 %    \end{macrocode}
 %
 %    \begin{macrocode}
@@ -581,8 +689,11 @@ end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-function fontspcm.sizes()
-  for key, size in ipairs(fontspcm.font_sizes) do
+function fontspcm.sizes(sizes)
+  if next(sizes) == nil then
+    sizes = fontspcm.font_sizes
+  end
+  for key, size in ipairs(sizes) do
     tex.print(' \\fontspcm@sample@text{' .. size .. '} ')
   end
 end
