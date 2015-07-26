@@ -220,15 +220,19 @@ simple font tables through to elaborate pattern samples.
 
 \subsection{Font selection}
 
-
-
-
 \begin{fontspcm}{FiraSans}[][\bfseries]
   \oneliner
-  %\sizes[20,6]
 \end{fontspcm}
 
 \subsection{Commands}
+
+\subsubsection{\cmd{\info}}
+
+\begin{example}
+\begin{fontspcm}{punknova}
+\info
+\end{fontspcm}
+\end{example}
 
 \subsubsection{\cmd{\glyphs}}
 
@@ -239,7 +243,7 @@ font sizes.
 
 \begin{code}
 \begin{verbatim}
-\begin{fontspcm}{SourceSansPro}[][\bfseries]
+\begin{fontspcm}{SourceSansPro}
 \sizes
 \end{fontspcm}
 \end{verbatim}
@@ -248,7 +252,7 @@ font sizes.
 \noindent By default this font sizes are used:
 
 \begin{example}
-\begin{fontspcm}{SourceSansPro}[][\bfseries]
+\begin{fontspcm}{SourceSansPro}
   \sizes
 \end{fontspcm}
 \end{example}
@@ -264,14 +268,14 @@ dimension \emph{points} (pt).
 \end{code}
 
 \begin{example}
-\begin{fontspcm}{SourceSansPro}[][\bfseries]
+\begin{fontspcm}{SourceSansPro}
 \sizes[4,20,6,34]
 \end{fontspcm}
 \end{example}
 
-  \DocInput{fontspcm.dtx}
-  \PrintChanges
-  \PrintIndex
+\DocInput{fontspcm.dtx}
+\PrintChanges
+\PrintIndex
 \end{document}
 %</driver>
 %<*readme>
@@ -347,28 +351,56 @@ or manually:
 }
 %    \end{macrocode}
 %
-% \begin{macro}{\fontspcm@glyph@view}
+% \begin{macro}{\fontspcm@glyph@char@format}
 % This macro formats the view of one glyph.
 %    \begin{macrocode}
-\def\fontspcm@glyph@view#1{%
+\def\fontspcm@glyph@char@format#1{%
   \noindent%
   \parbox[t][0.75cm][c]{1cm}{%
-    \centerline{\huge #1}%
+    \centerline{%
+      \huge%
+      \fontspcm@glyph@char{#1}%
+    }%
+  }%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\fontspcm@glyph@char}
+% This function returns a string like |\char"1FF6|.
+%    \begin{macrocode}
+\def\fontspcm@glyph@char#1{%
+  \directlua{
+    local glyph = fontspcm.font.glyphs[#1]
+    local char = fontspcm.fontchar(glyph.name)
+    tex.print(char)
   }%
 }
 %    \end{macrocode}
 % \end{macro}
 %
 % \begin{macro}{\fontspcm@glyph@name}
-% The macro |\fontspcm@glyph@name| formats the glyph name.
+% This macro returns unicode names like |f|, |H| or |braceleft|.
 %    \begin{macrocode}
 \def\fontspcm@glyph@name#1{%
+  \directlua{
+    glyph = fontspcm.font.glyphs[#1]
+    tex.print(glyph.name)
+  }%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\fontspcm@glyph@name@format}
+% The macro |\fontspcm@glyph@name@format| formats the glyph name.
+%    \begin{macrocode}
+\def\fontspcm@glyph@name@format#1{%
   \noindent%
   \parbox[t][0.75cm][c]{1cm}{%
     \centerline{%
       \tiny%
       \fontfamily{lmtt}\selectfont%
-      #1%
+      \fontspcm@glyph@name{#1}%
     }%
   }%
 }
@@ -377,17 +409,17 @@ or manually:
 %
 % \begin{macro}{\fontspcm@glyph@content}
 %    \begin{macrocode}
-\def\fontspcm@glyph@content#1#2{%
+\def\fontspcm@glyph@content#1{%
   \par%
-  \fontspcm@glyph@view{#1}%
+  \fontspcm@glyph@char@format{#1}%
   \par%
-  \fontspcm@glyph@name{#2}%
+  \fontspcm@glyph@name@format{#1}%
   \par%
 }
 %    \end{macrocode}
 % \end{macro}
 %
-% % \begin{macro}{\fontspcm@example@text@oneliner}
+% \begin{macro}{\fontspcm@example@text@oneliner}
 %    \begin{macrocode}
 \def\fontspcm@example@text@oneliner{%
   \directlua{tex.print(fontspcm.oneliner)}%
@@ -398,10 +430,10 @@ or manually:
 %
 % \begin{macro}{\fontspcmglyphframe}
 %    \begin{macrocode}
-\def\fontspcmglyphframe#1#2{%
+\def\fontspcmglyphframe#1{%
   \fbox{%
     \parbox[b][1.5cm][t]{1cm}{%
-      \fontspcm@glyph@content{#1}{#2}%
+      \fontspcm@glyph@content{#1}%
     }%
   }%
 }
@@ -420,9 +452,9 @@ or manually:
 % \end{macro}
 %
 %
-% \begin{macro}{\fontspcm@info}
+% \begin{macro}{\fontspcm@property}
 %    \begin{macrocode}
-\def\fontspcm@info#1{%
+\def\fontspcm@property#1{%
   \directlua{
     output = fontspcm.font['#1']
     if output then
@@ -433,6 +465,18 @@ or manually:
 %    \end{macrocode}
 % \end{macro}
 %
+% \begin{macro}{\fontspcm@glyph@property}
+%    \begin{macrocode}
+\def\fontspcm@glyph@property#1{%
+  \directlua{
+    output = fontspcm.glyph['#1']
+    if output then
+      tex.print(output)
+    end
+  }%
+}
+%    \end{macrocode}
+% \end{macro}
 %
 % \begin{macro}{\fontsampler}
 %    \begin{macrocode}
@@ -493,14 +537,13 @@ or manually:
 }
 %    \end{macrocode}
 % \end{macro}
-% \begin{macro}{\fontspcm@font@info@format}
+% \begin{macro}{\fontspcm@property@format}
 %    \begin{macrocode}
-\newcommand{\fontspcm@font@info@format}[2]{%
+\newcommand{\fontspcm@property@format}[2]{%
   \begingroup%
-  \let\i\fontspcm@info%
   \fontspcm@font@neutral%
   \noindent%
-  \textbf{#1:} \i{#2}%
+  \textbf{#1:} \fontspcm@property{#2}%
   \par%
   \endgroup%
 }
@@ -510,17 +553,15 @@ or manually:
 % \begin{macro}{\fontspcm@font@info}
 %    \begin{macrocode}
 \newcommand{\fontspcm@font@info}{%
-  \let\format\fontspcm@font@info@format%
+  \let\format\fontspcm@property@format%
   \format{Font name}{fontname}
   \format{Full name}{fullname}
   \format{Family name}{familyname}
   \format{Copyright}{copyright}
-  \format{File name}{filename}
+  \raggedright\format{File name}{origname}
   \format{Weight}{weight}
   \format{Italic angle}{italicangle}
-  \format{Comments}{comments}
-  \format{Origname}{origname}
-  \format{Glyph count}{glyphmax}
+  \format{Glyph count}{glyphcnt}
 }
 %    \end{macrocode}
 % \end{macro}
@@ -587,6 +628,12 @@ fontspcm.font = {}
 % |font.current()|.
 %    \begin{macrocode}
 fontspcm.font_id = ''
+%    \end{macrocode}
+%
+% |fontspcm.glyph| is a lua table which stores all informations of the
+% current glyph.
+%    \begin{macrocode}
+fontspcm.glyph = {}
 %    \end{macrocode}
 %
 % |fontspcm.oneliner| is a short sample text which is displayed
@@ -662,15 +709,9 @@ function fontspcm.glyphs()
   local f = fontspcm.font
   local i = 0
   while (i < f.glyphmax) do
-    local g = f.glyphs[i]
-    if g then
-      local chr = fontspcm.fontchar(g.name)
-      if chr then
-        frame = [[\fontspcmglyphframe{%s}{%s}]]
-        output = string.format(frame, chr, g.name)
-        tex.print(output)
-      end
-    end
+    frame = [[\fontspcmglyphframe{%s}]]
+    output = string.format(frame, i)
+    tex.print(output)
     i = i + 1
   end
 end
@@ -699,11 +740,30 @@ function fontspcm.sizes(sizes)
 end
 %    \end{macrocode}
 %
+% The function |fontspcm.fontchar()| converts a glyph name like |A|, |a|
+% or |braceleft| to a hexadecimal unicode number which is prefixed with
+% the \TeX{}'s \cmd{\char} command.
+%
+% I the example below the glyph name is |t|. |t| has the unicode number
+% |116| (decimal). |87| is the index number of glyph in the font.
+%
+% \begin{verbatim}
+% index: 87
+% name: t
+% unicode: 116
+% \end{verbatim}
+%
+% |fontspcm.fontchar()| returns |\char"74|. |74| is a hexadecimal number
+% which is the same as the decimal number |116|.
+%
+% \begin{verbatim}
+% chr: \char"74
+% \end{verbatim}
 %    \begin{macrocode}
-function fontspcm.fontchar(chr)
-  local chr = luaotfload.aux.slot_of_name(fontspcm.font_id, chr, false)
-  if chr and type(chr) == "number" then
-    return string.format([[\char"%X]], chr)
+function fontspcm.fontchar(glyph_name)
+  local char = luaotfload.aux.slot_of_name(fontspcm.font_id, glyph_name, false)
+  if char and type(char) == "number" then
+    return string.format([[\char"%X]], char)
   end
 end
 %    \end{macrocode}
