@@ -34,4 +34,3 @@ or manually:
     makeindex -s gglo.ist -o fontspcm.gls fontspcm.glo
     makeindex -s gind.ist -o fontspcm.ind fontspcm.idx
     lualatex fontspcm.dtx
-

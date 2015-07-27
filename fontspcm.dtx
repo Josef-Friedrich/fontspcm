@@ -102,14 +102,28 @@
 
 \maketitle
 
+\tableofcontents
+
+%-----------------------------------------------------------------------
+% Introduction
+%-----------------------------------------------------------------------
+
 \section{Introduction}
+
+%%
+% About the package name
+%%
 
 \subsection{About the package name}
 
 |fontspcm| is a abbreviation for \emph{font specimen}. The name of the
 package is inspired by the packages |fontspec| and |fontsmpl|.
 
-\subsection{Other font specimen packages.}
+%%
+% Other font specimen packages
+%%
+
+\subsection{Other font specimen packages}
 
 There are a lot of other packages dealing with font samples.
 
@@ -215,17 +229,84 @@ simple font tables through to elaborate pattern samples.
 
 \end{description}
 
+%-----------------------------------------------------------------------
+% Usage
+%-----------------------------------------------------------------------
+
 \section{Usage}
+
+%%
+% Font selection
+%%
 
 \subsection{Font selection}
 
+\begin{code}\begin{verbatim}
+\begin{fontspcm}{FiraSans}[Path=/usr/local/fonts][\bfseries]
+\pangram
+\end{fontspcm}
+\end{verbatim}\end{code}
+
 \begin{example}
 \begin{fontspcm}{FiraSans}[][\bfseries]
-  \oneliner
+\pangram
 \end{fontspcm}
 \end{example}
 
+%%
+% Commands
+%%
+
 \subsection{Commands}
+
+%%
+% \fontspcmset
+%%
+
+\subsubsection{\cmd{\fontspcmset}}
+
+\begin{code}\begin{verbatim}
+\begin{fontspcm}{Cabin}
+\pangram
+\end{fontspcm}
+\end{verbatim}\end{code}
+
+\begin{example}
+\begin{fontspcm}{Cabin}
+\pangram
+\end{fontspcm}
+\end{example}
+
+\begin{code}\begin{verbatim}
+\usepackage[pangram={Victor jagt zwölf Boxkämpfer
+quer über den großen Sylter Deich}]{fontspcm}
+\end{verbatim}\end{code}
+
+\begin{code}\begin{verbatim}
+\fontspcmset{pangram={Victor jagt zwölf Boxkämpfer
+quer über den großen Sylter Deich}}
+\end{verbatim}\end{code}
+
+\begin{code}\begin{verbatim}
+\begin{fontspcm}{Cabin}
+\pangram
+\end{fontspcm}
+\end{verbatim}\end{code}
+
+\fontspcmset{pangram={Victor jagt zwölf Boxkämpfer
+quer über den großen Sylter Deich}}
+
+\begin{example}
+\begin{fontspcm}{Cabin}
+\pangram
+\end{fontspcm}
+\end{example}
+
+\fontspcmset{pangram={The quick brown fox jumps over the lazy dog}}
+
+%%
+% \info
+%%
 
 \subsubsection{\cmd{\info}}
 
@@ -235,21 +316,27 @@ simple font tables through to elaborate pattern samples.
 \end{fontspcm}
 \end{example}
 
+%%
+% \glyphI
+%%
+
 \subsubsection{\cmd{\glyphI}}
 
-\begin{code}
-\begin{verbatim}
+\begin{code}\begin{verbatim}
 \begin{fontspcm}{Cabin}
 \glyphI{45} \glyphI{100} \glyphI{112}
 \end{fontspcm}
-\end{verbatim}
-\end{code}
+\end{verbatim}\end{code}
 
 \begin{example}
 \begin{fontspcm}{Cabin}
 \glyphI{45} \glyphI{100} \glyphI{112}
 \end{fontspcm}
 \end{example}
+
+%%
+% \glyphN
+%%
 
 \subsubsection{\cmd{\glyphN}}
 
@@ -259,26 +346,32 @@ simple font tables through to elaborate pattern samples.
 \end{fontspcm}
 \end{example}
 
+%%
+% \glyphs
+%%
+
 \subsubsection{\cmd{\glyphs}}
+
+%%
+% \sizes
+%%
 
 \subsubsection{\cmd{\sizes}}
 
 The command \cmd{\sizes}\oarg{sizes} returns an one-liner in different
 font sizes.
 
-\begin{code}
-\begin{verbatim}
+\begin{code}\begin{verbatim}
 \begin{fontspcm}{SourceSansPro}
 \sizes
 \end{fontspcm}
-\end{verbatim}
-\end{code}
+\end{verbatim}\end{code}
 
 \noindent By default this font sizes are used:
 
 \begin{example}
 \begin{fontspcm}{SourceSansPro}
-  \sizes
+\sizes
 \end{fontspcm}
 \end{example}
 
@@ -286,11 +379,9 @@ font sizes.
 list of numeric values. This numeric values are the font sizes in the
 dimension \emph{points} (pt).
 
-\begin{code}
-\begin{verbatim}
+\begin{code}\begin{verbatim}
 \sizes[4,20,6,34]
-\end{verbatim}
-\end{code}
+\end{verbatim}\end{code}
 
 \begin{example}
 \begin{fontspcm}{SourceSansPro}
@@ -340,7 +431,6 @@ or manually:
     makeindex -s gglo.ist -o fontspcm.gls fontspcm.glo
     makeindex -s gind.ist -o fontspcm.ind fontspcm.idx
     lualatex fontspcm.dtx
-
 %</readme>
 % \fi
 %
@@ -369,13 +459,34 @@ or manually:
 %<*package>
 % \fi
 %
+% \subsection{The file fontspcm.sty}
+%
+% \subsubsection{Initialisation}
+%
 %    \begin{macrocode}
-\RequirePackage{fontspec,xparse}
+\RequirePackage{fontspec,xparse,kvoptions}
 \directlua{
   fontspcm = require('fontspcm')
 }
 %    \end{macrocode}
-
+%
+% |FSKV| stands for \emph{font specimen key value}.
+%    \begin{macrocode}
+\SetupKeyvalOptions{
+  family=FSKV,
+  prefix=FSKV@
+}
+%    \end{macrocode}
+%
+% \subsubsection{Option handling}
+%
+%    \begin{macrocode}
+\DeclareStringOption{pangram}
+\define@key{FSKV}{pangram}[]{\directlua{fontspcm.options['pangram'] = '#1'}}
+%    \end{macrocode}
+%
+% \subsubsection{Privat macros}
+%
 % |\FSp@| is the abbreviation for \emph{font specimen} which is used in
 % local macro names.
 %
@@ -447,10 +558,11 @@ or manually:
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\FSp@example@text@oneliner}
+% \begin{macro}{\FSp@example@text@pangram}
 %    \begin{macrocode}
-\def\FSp@example@text@oneliner{%
-  \directlua{tex.print(fontspcm.oneliner)}%
+\def\FSp@example@text@pangram{%
+  \noindent%
+  \directlua{tex.print(fontspcm.options.pangram)}%
 }
 %    \end{macrocode}
 % \end{macro}
@@ -458,17 +570,17 @@ or manually:
 % \begin{macro}{\FSp@glyph@by@name}
 %    \begin{macrocode}
 \def\FSp@glyph@by@name#1{%
-  \FSp@glyph@by@index{
+  \FSp@glyph@by@index{%
     \directlua{
       local slot = luaotfload.aux.slot_of_name(fontspcm.font_id, 'A')
       tex.print(slot)
-    }
-  }
+    }%
+  }%
 }
 %    \end{macrocode}
 % \end{macro}
 %
-
+%
 %
 % \begin{macro}{\FSp@glyph@by@index}
 %    \begin{macrocode}
@@ -534,7 +646,7 @@ or manually:
 %    \begin{macrocode}
 \newcommand{\fonttable}[2]{
   \par
-  {\fontspec{#1} \directlua{tex.print(sampletext)}}
+  {\fontspec{#1}\directlua{tex.print(sampletext)}}
   \par
   {\tiny #2}
   \bigskip
@@ -543,7 +655,7 @@ or manually:
 % \end{macro}
 %
 % \begin{macro}{\FSp@sample@text}
-% The macro prints the string |fontspcm.oneliner|.
+% The macro prints the string |fontspcm.options.pangram|.
 %    \begin{macrocode}
 \newcommand{\FSp@sample@text}[1]{%
   \begingroup%
@@ -551,7 +663,7 @@ or manually:
   \fontsize{#1pt}{1em}\selectfont%
   \mbox{%
     \directlua{
-      tex.print(fontspcm.oneliner)
+      tex.print(fontspcm.options.pangram)
     }%
   }%
   \par%
@@ -625,6 +737,15 @@ or manually:
 %    \end{macrocode}
 % \end{macro}
 %
+% \subsection{Public macros}
+%
+% \begin{macro}{\fontspcmset}
+%    \begin{macrocode}
+\newcommand{\fontspcmset}[1]{%
+  \kvsetkeys{FSKV}{#1}%
+}
+%    \end{macrocode}
+% \end{macro}
 % \begin{environment}{fontspcm}
 %    \begin{macrocode}
 \DeclareDocumentEnvironment{fontspcm}{m O{} O{}}{%
@@ -636,7 +757,7 @@ or manually:
   \let\glyphI\FSp@glyph@by@index%
   \let\glyphN\FSp@glyph@by@name
   \let\info\FSp@font@info%
-  \let\oneliner\FSp@example@text@oneliner
+  \let\pangram\FSp@example@text@pangram
 }{}
 %    \end{macrocode}
 % \end{environment}
@@ -645,6 +766,8 @@ or manually:
 %</package>
 %<*lua>
 % \fi
+%
+% \subsection{The file fontspcm.lua}
 %
 %    \begin{macrocode}
 local fontspcm = {}
@@ -664,17 +787,23 @@ fontspcm.font = {}
 fontspcm.font_id = ''
 %    \end{macrocode}
 %
+% All options are stored in the variable |fontspcm.options|.
+%    \begin{macrocode}
+fontspcm.options = {}
+%    \end{macrocode}
+%
+% |fontspcm.options.pangram| is a short sample text which is displayed
+% without line breaks.
+%    \begin{macrocode}
+fontspcm.options.pangram = 'The quick brown fox jumps over the lazy dog.'
+%    \end{macrocode}
+%
 % |fontspcm.glyph| is a lua table which stores all informations of the
 % current glyph.
 %    \begin{macrocode}
 fontspcm.glyph = {}
 %    \end{macrocode}
 %
-% |fontspcm.oneliner| is a short sample text which is displayed
-% without line breaks.
-%    \begin{macrocode}
-fontspcm.oneliner = 'The quick brown fox jumps over the lazy dog.'
-%    \end{macrocode}
 %
 % |fontspcm.font_sizes| stores font sizes in points dimension (pt) as a
 % lua table.
