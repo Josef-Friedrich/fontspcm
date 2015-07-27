@@ -610,13 +610,17 @@ or manually:
 %
 % \begin{macro}{\FSp@glyphs}
 %    \begin{macrocode}
-\newcommand{\FSp@glyphs}{
-  \catcode`\_=12
-  \catcode`\$=12
-  \renewcommand{\arraystretch}{2}
+\newcommand{\FSp@glyphs}{%
+  \makeatletter%
+  \catcode`\_=12%
+  \catcode`\$=12%
+  \renewcommand{\arraystretch}{2}%
   \noindent\directlua{
     fontspcm.glyphs()
-  }
+  }%
+  \catcode`\_=8%
+  \catcode`\$=3%
+  \makeatother%
 }
 %    \end{macrocode}
 % \end{macro}
