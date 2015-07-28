@@ -880,6 +880,32 @@ function fontspcm.glyphs()
 end
 %    \end{macrocode}
 %
+% The function |fontspcm.unicode_table()| creates a lua table and stores
+% its result in the variable |fontspcm.font.unicode|. The \emph{values}
+% are decimal font index numbers. The \emph{keys} are decimal unicode
+% position numbers.
+%    \begin{macrocode}
+function fontspcm.unicode_table()
+  local unicode = {}
+  i = 0
+  while (i < fontspcm.font.glyphmax) do
+    local g = fontspcm.font.glyphs[i]
+    local u = g.unicode
+    if u ~= -1 then
+      unicode[u] = i
+    end
+    i = i + 1
+  end
+  return unicode
+end
+%    \end{macrocode}
+%
+% The function |fontspcm.set_font()| loads the current font in the
+% variable |fontspcm.font|. It also sets the variable |fontspcm.font_id|
+% to the current font ID. Further it adds the fields |filename| and
+% |unicode|. For unkown reasons the field |filename| is not set. This
+% function creates the array unicode which contains the glyph IDs with
+% their corresponding unicode numbers as keys.
 %    \begin{macrocode}
 function fontspcm.set_font()
   fontspcm.font_id = font.current()
@@ -888,6 +914,7 @@ function fontspcm.set_font()
   f = fontloader.open(filename)
   fontspcm.font = fontloader.to_table(f)
   fontspcm.font.filename = filename
+  fontspcm.font.unicode = fontspcm.unicode_table()
   fontloader.close(f)
 end
 %    \end{macrocode}
@@ -898,7 +925,7 @@ function fontspcm.sizes(sizes)
     sizes = fontspcm.font_sizes
   end
   for key, size in ipairs(sizes) do
-    tex.print(' \\FSp@sample@text{' .. size .. '} ')
+    tex.print('\\FSp@sample@text{' .. size .. '}')
   end
 end
 %    \end{macrocode}

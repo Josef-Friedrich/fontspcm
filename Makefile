@@ -18,4 +18,8 @@ ctan:
 	tar cvfz fontspcm.tar.gz fontspcm
 	rm -rf fontspcm
 
-.PHONY: all clean ctan
+test:
+	luatex fontspcm.ins
+	lualatex tests/test.tex
+
+.PHONY: all clean ctan test
