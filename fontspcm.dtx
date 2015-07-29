@@ -594,6 +594,38 @@ or manually:
 %    \end{macrocode}
 % \end{macro}
 %
+% \begin{macro}{\FSp@glyph@by@unicode}
+%    \begin{macrocode}
+\def\FSp@glyph@by@unicode#1{%
+  \FSp@glyph@by@index{%
+    \directlua{
+      local u = fontspcm.font.unicode[#1]
+      if u then
+        tex.print(u)
+      end
+      lol = unicode.utf8.byte('ß')
+      print(lol)
+    }%
+  }%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\FSp@glyph@by@char}
+%    \begin{macrocode}
+\def\FSp@glyph@by@char#1{%
+  \FSp@glyph@by@index{%
+    \directlua{
+      local u = unicode.utf8.byte('#1')
+      u = fontspcm.font.unicode[u]
+      if u then
+        tex.print(u)
+      end
+    }%
+  }%
+}
+%    \end{macrocode}
+% \end{macro}
 %
 % \begin{macro}{\FSp@set@font}
 %    \begin{macrocode}
@@ -755,7 +787,9 @@ or manually:
   \let\sizes\FSp@sizes%
   \let\glyphs\FSp@glyphs%
   \let\glyphI\FSp@glyph@by@index%
-  \let\glyphN\FSp@glyph@by@name
+  \let\glyphN\FSp@glyph@by@name%
+  \let\glyphU\FSp@glyph@by@unicode%
+  \let\glyphC\FSp@glyph@by@char%
   \let\info\FSp@font@info%
   \let\pangram\FSp@example@text@pangram
 }{}
