@@ -253,13 +253,15 @@ simple font tables through to elaborate pattern samples.
 \subsection{Font selection}
 
 \begin{code}\begin{verbatim}
-\begin{fontspcm}{FiraSans}[Path=/usr/local/fonts][\bfseries]
+\fontspec{FiraSans}\bfseries
+\begin{fontspcm}
 \pangram
 \end{fontspcm}
 \end{verbatim}\end{code}
 
 \begin{example}
-\begin{fontspcm}{FiraSans}[][\bfseries]
+\fontspec{FiraSans}\bfseries
+\begin{fontspcm}
 \pangram
 \end{fontspcm}
 \end{example}
@@ -277,13 +279,15 @@ simple font tables through to elaborate pattern samples.
 \subsubsection{\cmd{\fontspcmset}}
 
 \begin{code}\begin{verbatim}
-\begin{fontspcm}{Cabin}
+\fontspec{Cabin}
+\begin{fontspcm}
 \pangram
 \end{fontspcm}
 \end{verbatim}\end{code}
 
 \begin{example}
-\begin{fontspcm}{Cabin}
+\fontspec{Cabin}
+\begin{fontspcm}
 \pangram
 \end{fontspcm}
 \end{example}
@@ -299,7 +303,8 @@ quer über den großen Sylter Deich}}
 \end{verbatim}\end{code}
 
 \begin{code}\begin{verbatim}
-\begin{fontspcm}{Cabin}
+\fontspec{Cabin}
+\begin{fontspcm}
 \pangram
 \end{fontspcm}
 \end{verbatim}\end{code}
@@ -308,7 +313,8 @@ quer über den großen Sylter Deich}}
 quer über den großen Sylter Deich}}
 
 \begin{example}
-\begin{fontspcm}{Cabin}
+\fontspec{Cabin}
+\begin{fontspcm}
 \pangram
 \end{fontspcm}
 \end{example}
@@ -321,8 +327,16 @@ quer über den großen Sylter Deich}}
 
 \subsubsection{\cmd{\info}}
 
+\begin{code}\begin{verbatim}
+\fontspec{punknova}
+\begin{fontspcm}
+\info
+\end{fontspcm}
+\end{verbatim}\end{code}
+
 \begin{example}
-\begin{fontspcm}{punknova}
+\fontspec{punknova}
+\begin{fontspcm}
 \info
 \end{fontspcm}
 \end{example}
@@ -340,7 +354,8 @@ quer über den großen Sylter Deich}}
 \end{verbatim}\end{code}
 
 \begin{example}
-\begin{fontspcm}{Cabin}
+\fontspec{Cabin}
+\begin{fontspcm}
 \glyphI{45} \glyphI{100} \glyphI{112}
 \end{fontspcm}
 \end{example}
@@ -352,7 +367,8 @@ quer über den großen Sylter Deich}}
 \subsubsection{\cmd{\glyphN}}
 
 \begin{example}
-\begin{fontspcm}{Cabin}
+\fontspec{Cabin}
+\begin{fontspcm}
 \glyphN{45}
 \end{fontspcm}
 \end{example}
@@ -373,6 +389,7 @@ The command \cmd{\sizes}\oarg{sizes} returns an one-liner in different
 font sizes.
 
 \begin{code}\begin{verbatim}
+\fontspec{SourceSansPro}
 \begin{fontspcm}{SourceSansPro}
 \sizes
 \end{fontspcm}
@@ -381,7 +398,8 @@ font sizes.
 \noindent By default this font sizes are used:
 
 \begin{example}
-\begin{fontspcm}{SourceSansPro}
+\fontspec{SourceSansPro}
+\begin{fontspcm}
 \sizes
 \end{fontspcm}
 \end{example}
@@ -395,7 +413,8 @@ dimension \emph{points} (pt).
 \end{verbatim}\end{code}
 
 \begin{example}
-\begin{fontspcm}{SourceSansPro}
+\fontspec{SourceSansPro}
+\begin{fontspcm}
 \sizes[4,20,6,34]
 \end{fontspcm}
 \end{example}
@@ -475,7 +494,7 @@ or manually:
 % \subsubsection{Initialisation}
 %
 %    \begin{macrocode}
-\RequirePackage{fontspec,xparse,kvoptions}
+\RequirePackage{fontspec,kvoptions}
 \directlua{
   fontspcm = require('fontspcm')
 }
@@ -614,8 +633,6 @@ or manually:
       if u then
         tex.print(u)
       end
-      lol = unicode.utf8.byte('ß')
-      print(lol)
     }%
   }%
 }
@@ -789,12 +806,13 @@ or manually:
 }
 %    \end{macrocode}
 % \end{macro}
-% \begin{environment}{fontspcm}
+%
+% \begin{macro}{\FSp@publish@macros}
+% We make some local macros public. The command |\FSp@publish@macros|
+% can be used, to publish this macros locally in several environments,
+% so we get short and simple macro names without any prefixes.
 %    \begin{macrocode}
-\DeclareDocumentEnvironment{fontspcm}{m O{} O{}}{%
-  \fontspec{#1}[#2]%
-  #3%
-  \FSp@set@font%
+\def\FSp@publish@macros{%
   \let\sizes\FSp@sizes%
   \let\glyphs\FSp@glyphs%
   \let\glyphI\FSp@glyph@by@index%
@@ -802,7 +820,17 @@ or manually:
   \let\glyphU\FSp@glyph@by@unicode%
   \let\glyphC\FSp@glyph@by@char%
   \let\info\FSp@font@info%
-  \let\pangram\FSp@example@text@pangram
+  \let\pangram\FSp@example@text@pangram%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{environment}{fontspcm}
+%    \begin{macrocode}
+\newenvironment{fontspcm}[1][]{%
+  \kvsetkeys{FSE}{#1}%
+  \FSp@set@font%
+  \FSp@publish@macros%
 }{}
 %    \end{macrocode}
 % \end{environment}
