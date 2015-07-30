@@ -517,28 +517,28 @@ or manually:
 %
 % \subsubsection{Privat macros}
 %
-% |\FSp@| is the abbreviation for \emph{font specimen} which is used in
+% |\FS@| is the abbreviation for \emph{font specimen} which is used in
 % local macro names.
 %
-% \begin{macro}{\FSp@glyph@char@format}
+% \begin{macro}{\FS@glyph@char@format}
 % This macro formats the view of one glyph.
 %    \begin{macrocode}
-\def\FSp@glyph@char@format#1{%
+\def\FS@glyph@char@format#1{%
   \noindent%
   \parbox[t][0.75cm][c]{1cm}{%
     \centerline{%
       \huge%
-      \FSp@glyph@char{#1}%
+      \FS@glyph@char{#1}%
     }%
   }%
 }
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\FSp@glyph@char}
+% \begin{macro}{\FS@glyph@char}
 % This function returns a string like |\char"1FF6|.
 %    \begin{macrocode}
-\def\FSp@glyph@char#1{%
+\def\FS@glyph@char#1{%
   \directlua{
     local glyph = fontspcm.font.glyphs[#1]
     local char = fontspcm.fontchar(glyph.name)
@@ -548,10 +548,10 @@ or manually:
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\FSp@glyph@name}
+% \begin{macro}{\FS@glyph@name}
 % This macro returns unicode names like |f|, |H| or |braceleft|.
 %    \begin{macrocode}
-\def\FSp@glyph@name#1{%
+\def\FS@glyph@name#1{%
   \directlua{
     glyph = fontspcm.font.glyphs[#1]
     tex.print(glyph.name)
@@ -560,47 +560,47 @@ or manually:
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\FSp@glyph@name@format}
-% The macro |\FSp@glyph@name@format| formats the glyph name.
+% \begin{macro}{\FS@glyph@name@format}
+% The macro |\FS@glyph@name@format| formats the glyph name.
 %    \begin{macrocode}
-\def\FSp@glyph@name@format#1{%
+\def\FS@glyph@name@format#1{%
   \noindent%
   \parbox[t][0.75cm][c]{1cm}{%
     \centerline{%
       \tiny%
       \fontfamily{lmtt}\selectfont%
-      \FSp@glyph@name{#1}%
+      \FS@glyph@name{#1}%
     }%
   }%
 }
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\FSp@glyph@content}
+% \begin{macro}{\FS@glyph@content}
 %    \begin{macrocode}
-\def\FSp@glyph@content#1{%
+\def\FS@glyph@content#1{%
   \par%
-  \FSp@glyph@char@format{#1}%
+  \FS@glyph@char@format{#1}%
   \par%
-  \FSp@glyph@name@format{#1}%
+  \FS@glyph@name@format{#1}%
   \par%
 }
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\FSp@example@text@pangram}
+% \begin{macro}{\FS@example@text@pangram}
 %    \begin{macrocode}
-\def\FSp@example@text@pangram{%
+\def\FS@example@text@pangram{%
   \noindent%
   \directlua{tex.print(fontspcm.options.pangram)}%
 }
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\FSp@glyph@by@name}
+% \begin{macro}{\FS@glyph@by@name}
 %    \begin{macrocode}
-\def\FSp@glyph@by@name#1{%
-  \FSp@glyph@by@index{%
+\def\FS@glyph@by@name#1{%
+  \FS@glyph@by@index{%
     \directlua{
       local slot = luaotfload.aux.slot_of_name(fontspcm.font_id, 'A')
       tex.print(slot)
@@ -612,22 +612,22 @@ or manually:
 %
 %
 %
-% \begin{macro}{\FSp@glyph@by@index}
+% \begin{macro}{\FS@glyph@by@index}
 %    \begin{macrocode}
-\def\FSp@glyph@by@index#1{%
+\def\FS@glyph@by@index#1{%
   \fbox{%
     \parbox[b][1.5cm][t]{1cm}{%
-      \FSp@glyph@content{#1}%
+      \FS@glyph@content{#1}%
     }%
   }%
 }
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\FSp@glyph@by@unicode}
+% \begin{macro}{\FS@glyph@by@unicode}
 %    \begin{macrocode}
-\def\FSp@glyph@by@unicode#1{%
-  \FSp@glyph@by@index{%
+\def\FS@glyph@by@unicode#1{%
+  \FS@glyph@by@index{%
     \directlua{
       local u = fontspcm.font.unicode[#1]
       if u then
@@ -639,10 +639,10 @@ or manually:
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\FSp@glyph@by@char}
+% \begin{macro}{\FS@glyph@by@char}
 %    \begin{macrocode}
-\def\FSp@glyph@by@char#1{%
-  \FSp@glyph@by@index{%
+\def\FS@glyph@by@char#1{%
+  \FS@glyph@by@index{%
     \directlua{
       local u = unicode.utf8.byte('#1')
       u = fontspcm.font.unicode[u]
@@ -655,9 +655,9 @@ or manually:
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\FSp@set@font}
+% \begin{macro}{\FS@set@font}
 %    \begin{macrocode}
-\def\FSp@set@font{%
+\def\FS@set@font{%
   \directlua{
     fontspcm.set_font()
   }%
@@ -666,9 +666,9 @@ or manually:
 % \end{macro}
 %
 %
-% \begin{macro}{\FSp@property}
+% \begin{macro}{\FS@property}
 %    \begin{macrocode}
-\def\FSp@property#1{%
+\def\FS@property#1{%
   \directlua{
     output = fontspcm.font['#1']
     if output then
@@ -679,9 +679,9 @@ or manually:
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\FSp@glyph@property}
+% \begin{macro}{\FS@glyph@property}
 %    \begin{macrocode}
-\def\FSp@glyph@property#1{%
+\def\FS@glyph@property#1{%
   \directlua{
     output = fontspcm.glyph['#1']
     if output then
@@ -714,10 +714,10 @@ or manually:
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\FSp@sample@text}
+% \begin{macro}{\FS@sample@text}
 % The macro prints the string |fontspcm.options.pangram|.
 %    \begin{macrocode}
-\newcommand{\FSp@sample@text}[1]{%
+\newcommand{\FS@sample@text}[1]{%
   \begingroup%
   \noindent%
   \fontsize{#1pt}{1em}\selectfont%
@@ -732,9 +732,9 @@ or manually:
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\FSp@sizes}
+% \begin{macro}{\FS@sizes}
 %    \begin{macrocode}
-\newcommand{\FSp@sizes}[1][]{%
+\newcommand{\FS@sizes}[1][]{%
   \makeatletter
   \directlua{
     fontspcm.sizes({#1})
@@ -744,30 +744,30 @@ or manually:
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\FSp@font@neutral}
+% \begin{macro}{\FS@font@neutral}
 %    \begin{macrocode}
-\newcommand{\FSp@font@neutral}{%
+\newcommand{\FS@font@neutral}{%
   \fontfamily{lmr}\selectfont%
 }
 %    \end{macrocode}
 % \end{macro}
-% \begin{macro}{\FSp@property@format}
+% \begin{macro}{\FS@property@format}
 %    \begin{macrocode}
-\newcommand{\FSp@property@format}[2]{%
+\newcommand{\FS@property@format}[2]{%
   \begingroup%
-  \FSp@font@neutral%
+  \FS@font@neutral%
   \noindent%
-  \textbf{#1:} \FSp@property{#2}%
+  \textbf{#1:} \FS@property{#2}%
   \par%
   \endgroup%
 }
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\FSp@font@info}
+% \begin{macro}{\FS@font@info}
 %    \begin{macrocode}
-\newcommand{\FSp@font@info}{%
-  \let\format\FSp@property@format%
+\newcommand{\FS@font@info}{%
+  \let\format\FS@property@format%
   \format{Font name}{fontname}
   \format{Full name}{fullname}
   \format{Family name}{familyname}
@@ -780,9 +780,9 @@ or manually:
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\FSp@glyphs}
+% \begin{macro}{\FS@glyphs}
 %    \begin{macrocode}
-\newcommand{\FSp@glyphs}{%
+\newcommand{\FS@glyphs}{%
   \makeatletter%
   \catcode`\_=12%
   \catcode`\$=12%
@@ -807,20 +807,20 @@ or manually:
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\FSp@publish@macros}
-% We make some local macros public. The command |\FSp@publish@macros|
+% \begin{macro}{\FS@publish@macros}
+% We make some local macros public. The command |\FS@publish@macros|
 % can be used, to publish this macros locally in several environments,
 % so we get short and simple macro names without any prefixes.
 %    \begin{macrocode}
-\def\FSp@publish@macros{%
-  \let\sizes\FSp@sizes%
-  \let\glyphs\FSp@glyphs%
-  \let\glyphI\FSp@glyph@by@index%
-  \let\glyphN\FSp@glyph@by@name%
-  \let\glyphU\FSp@glyph@by@unicode%
-  \let\glyphC\FSp@glyph@by@char%
-  \let\info\FSp@font@info%
-  \let\pangram\FSp@example@text@pangram%
+\def\FS@publish@macros{%
+  \let\sizes\FS@sizes%
+  \let\glyphs\FS@glyphs%
+  \let\glyphI\FS@glyph@by@index%
+  \let\glyphN\FS@glyph@by@name%
+  \let\glyphU\FS@glyph@by@unicode%
+  \let\glyphC\FS@glyph@by@char%
+  \let\info\FS@font@info%
+  \let\pangram\FS@example@text@pangram%
 }
 %    \end{macrocode}
 % \end{macro}
@@ -829,8 +829,8 @@ or manually:
 %    \begin{macrocode}
 \newenvironment{fontspcm}[1][]{%
   \kvsetkeys{FSE}{#1}%
-  \FSp@set@font%
-  \FSp@publish@macros%
+  \FS@set@font%
+  \FS@publish@macros%
 }{}
 %    \end{macrocode}
 % \end{environment}
@@ -945,7 +945,7 @@ function fontspcm.glyphs()
   local f = fontspcm.font
   local i = 0
   while (i < f.glyphmax) do
-    frame = [[\FSp@glyph@by@index{%s}]]
+    frame = [[\FS@glyph@by@index{%s}]]
     output = string.format(frame, i)
     tex.print(output)
     i = i + 1
@@ -998,7 +998,7 @@ function fontspcm.sizes(sizes)
     sizes = fontspcm.font_sizes
   end
   for key, size in ipairs(sizes) do
-    tex.print('\\FSp@sample@text{' .. size .. '}')
+    tex.print('\\FS@sample@text{' .. size .. '}')
   end
 end
 %    \end{macrocode}
