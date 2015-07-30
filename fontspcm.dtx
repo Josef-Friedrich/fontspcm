@@ -692,28 +692,6 @@ or manually:
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\fontsampler}
-%    \begin{macrocode}
-\newcommand{\fontsampler}[1]{
-  \directlua{
-    fontspcm.fontsampler("#1")
-  }
-}
-%    \end{macrocode}
-% \end{macro}
-%
-% \begin{macro}{\fonttable}
-%    \begin{macrocode}
-\newcommand{\fonttable}[2]{
-  \par
-  {\fontspec{#1}\directlua{tex.print(sampletext)}}
-  \par
-  {\tiny #2}
-  \bigskip
-}
-%    \end{macrocode}
-% \end{macro}
-%
 % \begin{macro}{\FS@sample@text}
 % The macro prints the string |fontspcm.options.pangram|.
 %    \begin{macrocode}
@@ -751,6 +729,7 @@ or manually:
 }
 %    \end{macrocode}
 % \end{macro}
+%
 % \begin{macro}{\FS@property@format}
 %    \begin{macrocode}
 \newcommand{\FS@property@format}[2]{%
@@ -797,16 +776,6 @@ or manually:
 %    \end{macrocode}
 % \end{macro}
 %
-% \subsection{Public macros}
-%
-% \begin{macro}{\fontspcmset}
-%    \begin{macrocode}
-\newcommand{\fontspcmset}[1]{%
-  \kvsetkeys{FSKV}{#1}%
-}
-%    \end{macrocode}
-% \end{macro}
-%
 % \begin{macro}{\FS@publish@macros}
 % We make some local macros public. The command |\FS@publish@macros|
 % can be used, to publish this macros locally in several environments,
@@ -821,6 +790,25 @@ or manually:
   \let\glyphC\FS@glyph@by@char%
   \let\info\FS@font@info%
   \let\pangram\FS@example@text@pangram%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \subsection{Public macros}
+%
+%
+% \begin{macro}{\fontspcmdir}
+%    \begin{macrocode}
+\newcommand{\fontspcmdir}[1]{%
+  \directlua{fontspcm.dir('#1')}
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\fontspcmset}
+%    \begin{macrocode}
+\newcommand{\fontspcmset}[1]{%
+  \kvsetkeys{FSKV}{#1}%
 }
 %    \end{macrocode}
 % \end{macro}
@@ -886,15 +874,14 @@ fontspcm.font_sizes = {6,8,10,12,16,22,48,64}
 %
 %    \begin{macrocode}
 local function dirtree(dir)
-  assert(dir and dir ~= "", "directory parameter is missing or empty")
-  if string.sub(dir, -1) == "/" then
-    dir=string.sub(dir, 1, -2)
+  if string.sub(dir, -1) == '/' then
+    dir = string.sub(dir, 1, -2)
   end
 
   local function yieldtree(dir)
     for entry in lfs.dir(dir) do
-      if not entry:match("^%.") then
-        entry=dir.."/"..entry
+      if not entry:match('^%.') then
+        entry = dir .. '/' .. entry
           if not lfs.isdir(entry) then
             coroutine.yield(entry,lfs.attributes(entry))
           end
@@ -910,31 +897,10 @@ end
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-function fontspcm.fontsampler(dir)
-  local t = {}
-  local w = {}
-  local p = {}
-
+function fontspcm.dir(dir)
   for path in dirtree(dir) do
-    if path:match(".ttf","-4") then
-
-      f = fontloader.open(path)
-
-      --table.insert(t, f.fullname)
-
-      w[f.weight] = path
-      t[f.familyname] = w
-
-      output =
-        -- "Fullname: " .. f.fullname .. "; " ..
-        "Familyname: " .. f.familyname .. "; " ..
-        -- "Fontname: " .. f.fontname .. "; " ..
-        -- "Italic: " .. f.italicangle .. "; " ..
-        "Weight: " .. f.weight .. "; "
-
-      -- tex.print(output)
-      tex.print("\\fonttable{" .. f.fontname .. "}{" .. output  .. "}")
-
+    if path:match('.ttf','-4') then
+      print(path)
     end
   end
 end
