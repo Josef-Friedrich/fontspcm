@@ -527,6 +527,7 @@ or manually:
   \noindent%
   \parbox[t][0.75cm][c]{1cm}{%
     \centerline{%
+    \FS@tmp@font%
       \huge%
       \FS@glyph@char{#1}%
     }%
@@ -790,17 +791,44 @@ or manually:
   \let\glyphC\FS@glyph@by@char%
   \let\info\FS@font@info%
   \let\pangram\FS@example@text@pangram%
+  \let\property\FS@property%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\FS@dir@font}
+% The first argument gets the full path of the font file.
+%    \begin{macrocode}
+\def\FS@dir@font#1{%
+  \begingroup%
+  \font\FS@tmp@font "[#1]"%
+  \FS@tmp@font%
+  \FS@set@font%
+  \FS@publish@macros%
+  \fontspcmdirformat%
+  \par%
+  \endgroup%
 }
 %    \end{macrocode}
 % \end{macro}
 %
 % \subsection{Public macros}
 %
-%
 % \begin{macro}{\fontspcmdir}
 %    \begin{macrocode}
 \newcommand{\fontspcmdir}[1]{%
-  \directlua{fontspcm.dir('#1')}
+  \makeatletter%
+  \directlua{fontspcm.dir('#1')}%
+  \makeatother%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\fontspcmdirformat}
+%    \begin{macrocode}
+\newcommand{\fontspcmdirformat}{%
+  \info%
+  \pangram%
 }
 %    \end{macrocode}
 % \end{macro}
@@ -900,7 +928,7 @@ end
 function fontspcm.dir(dir)
   for path in dirtree(dir) do
     if path:match('.ttf','-4') then
-      print(path)
+      tex.print('\\FS@dir@font{' .. path .. '}')
     end
   end
 end
