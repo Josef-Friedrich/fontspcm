@@ -527,8 +527,8 @@ or manually:
   \noindent%
   \parbox[t][0.75cm][c]{1cm}{%
     \centerline{%
-    \FS@tmp@font%
-      \huge%
+      \FS@font{40}%
+      \FS@sized@font%
       \FS@glyph@char{#1}%
     }%
   }%
@@ -611,7 +611,18 @@ or manually:
 %    \end{macrocode}
 % \end{macro}
 %
-%
+% \begin{macro}{\FS@font}
+%    \begin{macrocode}
+\def\FS@font#1{%
+  \font\FS@sized@font = "[%
+    \directlua{
+      tex.print(fontspcm.font.filename)
+    }%
+  ]" at #1pt%
+  \FS@sized@font%
+}
+%    \end{macrocode}
+% \end{macro}
 %
 % \begin{macro}{\FS@glyph@by@index}
 %    \begin{macrocode}
@@ -656,9 +667,9 @@ or manually:
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\FS@set@font}
+% \begin{macro}{\FS@set@font@to@lua}
 %    \begin{macrocode}
-\def\FS@set@font{%
+\def\FS@set@font@to@lua{%
   \directlua{
     fontspcm.set_font()
   }%
@@ -699,7 +710,8 @@ or manually:
 \newcommand{\FS@sample@text}[1]{%
   \begingroup%
   \noindent%
-  \fontsize{#1pt}{1em}\selectfont%
+  \FS@font{#1}%
+  \FS@sized@font%
   \mbox{%
     \directlua{
       tex.print(fontspcm.options.pangram)
@@ -803,7 +815,7 @@ or manually:
   \begingroup%
   \font\FS@tmp@font "[#1]"%
   \FS@tmp@font%
-  \FS@set@font%
+  \FS@set@font@to@lua%
   \FS@publish@macros%
   \fontspcmdirformat%
   \par%
@@ -845,7 +857,7 @@ or manually:
 %    \begin{macrocode}
 \newenvironment{fontspcm}[1][]{%
   \kvsetkeys{FSE}{#1}%
-  \FS@set@font%
+  \FS@set@font@to@lua%
   \FS@publish@macros%
 }{}
 %    \end{macrocode}
@@ -976,6 +988,7 @@ end
 %    \begin{macrocode}
 function fontspcm.set_font()
   fontspcm.font_id = font.current()
+  tex.definefont('fontspcmfont', fontspcm.font_id)
   local f = font.getfont(fontspcm.font_id)
   local filename = f.filename
   f = fontloader.open(filename)
