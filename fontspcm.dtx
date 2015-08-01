@@ -353,18 +353,40 @@ quer über den großen Sylter Deich}}
 % \glyphI
 %%
 
+To demonstrate all commands which displaying a single glyph we use the
+word \emph{test}.
+
+\begin{enumerate}
+\item |e|: U+0065 LATIN SMALL LETTER E
+\item |s|: U+0073 LATIN SMALL LETTER S
+\item |s|: U+0074 LATIN SMALL LETTER T
+\end{enumerate}
+
 \subsubsection{\cmd{\glyphI}}
 
 \begin{code}\begin{verbatim}
-\begin{fontspcm}{Cabin}
-\glyphI{45} \glyphI{100} \glyphI{112}
+\begin{fontspcm}
+\glyphI{105} \glyphI{50} \glyphI{98} \glyphI{105}
 \end{fontspcm}
 \end{verbatim}\end{code}
 
 \begin{example}
-\fontspec{Cabin}
 \begin{fontspcm}
-\glyphI{45} \glyphI{100} \glyphI{112}
+\glyphI{105} \glyphI{50} \glyphI{98} \glyphI{105}
+\end{fontspcm}
+\end{example}
+
+We change the font and our test word changes completly, because each
+font has its own glyph order.
+
+\begin{code}\begin{verbatim}
+\fontspec{FiraSans}
+\end{verbatim}\end{code}
+
+\begin{example}
+\fontspec{FiraSans}
+\begin{fontspcm}
+\glyphI{105} \glyphI{50} \glyphI{98} \glyphI{105}
 \end{fontspcm}
 \end{example}
 
@@ -375,9 +397,45 @@ quer über den großen Sylter Deich}}
 \subsubsection{\cmd{\glyphN}}
 
 \begin{example}
-\fontspec{Cabin}
 \begin{fontspcm}
-\glyphN{45}
+\glyphN{e}
+\end{fontspcm}
+\end{example}
+
+%%
+% \glyphU
+%%
+
+\subsubsection{\cmd{\glyphU}}
+
+\begin{code}\begin{verbatim}
+\begin{fontspcm}
+\glyphU{116} \glyphU{101} \glyphU{115} \glyphU{116}
+\end{fontspcm}
+\end{verbatim}\end{code}
+
+\begin{example}
+\begin{fontspcm}
+\glyphU{116} \glyphU{101} \glyphU{115} \glyphU{116}
+\end{fontspcm}
+\end{example}
+
+
+%%
+% \glyphC
+%%
+
+\subsubsection{\cmd{\glyphC}}
+
+\begin{code}\begin{verbatim}
+\begin{fontspcm}
+\glyphC{t} \glyphC{e} \glyphC{s} \glyphC{t}
+\end{fontspcm}
+\end{verbatim}\end{code}
+
+\begin{example}
+\begin{fontspcm}
+\glyphC{t} \glyphC{e} \glyphC{s} \glyphC{t}
 \end{fontspcm}
 \end{example}
 
@@ -593,6 +651,7 @@ or manually:
   \par%
   \FS@glyph@name@format{#1}%
   \par%
+  \tiny i: #1
 }
 %    \end{macrocode}
 % \end{macro}
@@ -611,7 +670,7 @@ or manually:
 \def\FS@glyph@by@name#1{%
   \FS@glyph@by@index{%
     \directlua{
-      local slot = luaotfload.aux.slot_of_name(fontspcm.font_id, 'A')
+      local slot = luaotfload.aux.slot_of_name(fontspcm.font_id, '#1')
       tex.print(slot)
     }%
   }%
