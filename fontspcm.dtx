@@ -528,7 +528,6 @@ or manually:
   \parbox[t][0.75cm][c]{1cm}{%
     \centerline{%
       \FS@font{40}%
-      \FS@sized@font%
       \FS@glyph@char{#1}%
     }%
   }%
@@ -711,7 +710,6 @@ or manually:
   \begingroup%
   \noindent%
   \FS@font{#1}%
-  \FS@sized@font%
   \mbox{%
     \directlua{
       tex.print(fontspcm.options.pangram)
