@@ -1008,6 +1008,46 @@ function fontspcm.dir(dir)
 end
 %    \end{macrocode}
 %
+% This function returns the filename of a given path. For example if
+% path is |/usr/share/fonts/Sans.ttf| the function returns |Sans|. The
+% function also cuts off the extension including the last point.
+%    \begin{macrocode}
+local function get_filename(path)
+  local filename = string.match(path, ".-([^\\/]-%.?[^%.\\/]*)$")
+  return string.sub(filename, 1, -5)
+end
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+function fontspcm.create_font_documents(dir)
+  local content = [[
+\documentclass{article}
+\usepackage{fontspcm}
+
+\begin{document}
+
+\font\testfont = ["%s"]
+\testfont
+
+\begin{fontspcm}
+\info
+\sizes
+\glyphs
+\end{fontspcm}
+\end{document}]]
+  for path in dirtree(dir) do
+    if path:match('.ttf','-4') then
+      filename = get_filename(path)
+      out = io.open('f_' .. filename .. '.tex', 'w')
+      content = string.format(content, path)
+      out:write(content .. '\n')
+      io.close(out)
+    end
+  end
+
+end
+%    \end{macrocode}
+%
 %    \begin{macrocode}
 function fontspcm.glyphs()
   local f = fontspcm.font
@@ -1066,7 +1106,6 @@ end
 %    \begin{macrocode}
 function fontspcm.set_font()
   fontspcm.font_id = font.current()
-  tex.definefont('fontspcmfont', fontspcm.font_id)
   local f = font.getfont(fontspcm.font_id)
   local filename = f.filename
   f = fontloader.open(filename)

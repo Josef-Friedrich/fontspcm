@@ -3,18 +3,15 @@
 \usepackage{fontspcm}
 \begin{document}
 
-\begin{fontspcm}
-\glyphs
-\end{fontspcm}
-
 \renewcommand{\fontspcmdirformat}{
-  lol
-
- \glyphs
-
-  \vspace{3cm}
+ \pangram
 }
 
-%\fontspcmdir{/opt/googlefonts/ofl/worksans}
+%\fontspcmdir{/opt/googlefonts/ofl}
+%\fontspcmdir{/opt/googlefonts/apache}
+%\fontspcmdir{/opt/googlefonts/ofl/zeyada}
+%\fontspcmdir{/usr/share/fonts}
+
+\directlua{fontspcm.create_font_documents('/opt/googlefonts/ofl')}
 
 \end{document}
