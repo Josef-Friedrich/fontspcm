@@ -708,10 +708,7 @@ or manually:
 \def\FS@glyph@by@unicode#1{%
   \FS@glyph@by@index{%
     \directlua{
-      local u = fontspcm.font.unicode[#1]
-      if u then
-        tex.print(u)
-      end
+      fontspcm.unicode_to_glyphindex(#1)
     }%
   }%
 }
@@ -723,11 +720,7 @@ or manually:
 \def\FS@glyph@by@char#1{%
   \FS@glyph@by@index{%
     \directlua{
-      local u = unicode.utf8.byte('#1')
-      u = fontspcm.font.unicode[u]
-      if u then
-        tex.print(u)
-      end
+      fontspcm.char_utf8_to_glyphindex('#1')
     }%
   }%
 }
@@ -978,6 +971,9 @@ fontspcm.glyph = {}
 fontspcm.font_sizes = {6,8,10,12,16,22,48,64}
 %    \end{macrocode}
 %
+% The following \emph{Dir Tree Iterator} was written by David Kastrup
+% and was pulished at
+% \href{http://lua-users.org/wiki/DirTreeIterator}{lua-user.org}.
 %    \begin{macrocode}
 local function dirtree(dir)
   if string.sub(dir, -1) == '/' then
@@ -1025,12 +1021,12 @@ function fontspcm.glyphs()
 end
 %    \end{macrocode}
 %
-% The function |fontspcm.unicode_table()| creates a lua table and stores
+% The function |create_unicode_table()| creates a lua table and stores
 % its result in the variable |fontspcm.font.unicode|. The \emph{values}
 % are decimal font index numbers. The \emph{keys} are decimal unicode
 % position numbers.
 %    \begin{macrocode}
-function fontspcm.unicode_table()
+local function create_unicode_table()
   local unicode = {}
   i = 0
   while (i < fontspcm.font.glyphmax) do
@@ -1042,6 +1038,22 @@ function fontspcm.unicode_table()
     i = i + 1
   end
   return unicode
+end
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+function fontspcm.unicode_to_glyphindex(ucodepoint)
+  if fontspcm.font.unicode == nil then
+    fontspcm.font.unicode = create_unicode_table()
+  end
+  tex.print(fontspcm.font.unicode[ucodepoint])
+end
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+function fontspcm.char_utf8_to_glyphindex(char)
+  local u = unicode.utf8.byte(char)
+  fontspcm.unicode_to_glyphindex(u)
 end
 %    \end{macrocode}
 %
@@ -1060,7 +1072,6 @@ function fontspcm.set_font()
   f = fontloader.open(filename)
   fontspcm.font = fontloader.to_table(f)
   fontspcm.font.filename = filename
-  fontspcm.font.unicode = fontspcm.unicode_table()
   fontloader.close(f)
 end
 %    \end{macrocode}
@@ -1098,7 +1109,11 @@ end
 %
 %    \begin{macrocode}
 function fontspcm.fontchar(glyph_name)
-  local char = luaotfload.aux.slot_of_name(fontspcm.font_id, glyph_name, false)
+  local char = luaotfload.aux.slot_of_name(
+    fontspcm.font_id,
+    glyph_name,
+    false
+  )
   if char and type(char) == "number" then
     return string.format([[\char"%X]], char)
   end
